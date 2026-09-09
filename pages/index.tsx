@@ -1,82 +1,119 @@
-import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
+import { GetStaticProps } from 'next';
+import React from 'react';
+import Navbar from '../src/components/Navbar';
+import Header from '../src/components/Header';
+import Card from '../src/components/Card';
+import Button from '../src/components/Button';
+import Footer from '../src/components/Footer';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+interface HomeProps {
+  title: string;
+}
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+export default function Home({ title }: HomeProps): React.ReactElement {
+  const handleCtaClick = (): void => {
+    window.location.href = '/contato';
+  };
 
-export default function Home() {
   return (
-    <div
-      className={`${geistSans.variable} ${geistMono.variable} flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black`}
-    >
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              index.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="min-h-screen flex flex-col bg-white">
+      <Navbar />
+
+      <Header
+        title={title}
+        subtitle="Assistência jurídica focada em resultados"
+        ctaText="Agende sua consulta"
+        onCtaClick={handleCtaClick}
+      />
+
+      <main className="flex-grow max-w-7xl mx-auto px-4 py-16 w-full">
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-black mb-8">Áreas de Atuação</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card shadow="md" padding="lg">
+              <h3 className="text-xl font-bold text-red-900 mb-3">Direito Civil</h3>
+              <p className="text-gray-700 mb-4">
+                Orientação em questões contratuais, responsabilidade civil e resolução de litígios.
+              </p>
+              <Button variant="outline" size="sm" className="w-full">
+                Saiba mais
+              </Button>
+            </Card>
+
+            <Card shadow="md" padding="lg">
+              <h3 className="text-xl font-bold text-red-900 mb-3">Direito Empresarial</h3>
+              <p className="text-gray-700 mb-4">
+                Consultoria em constituição, fusões, aquisições e conformidade regulatória.
+              </p>
+              <Button variant="outline" size="sm" className="w-full">
+                Saiba mais
+              </Button>
+            </Card>
+
+            <Card shadow="md" padding="lg">
+              <h3 className="text-xl font-bold text-red-900 mb-3">Direito Imobiliário</h3>
+              <p className="text-gray-700 mb-4">
+                Negociação e documentação de operações imobiliárias residenciais e comerciais.
+              </p>
+              <Button variant="outline" size="sm" className="w-full">
+                Saiba mais
+              </Button>
+            </Card>
+          </div>
+        </section>
+
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-black mb-8">Por que nos escolher</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card shadow="sm" padding="md">
+              <p className="text-gray-700">
+                <strong className="text-red-900">Experiência:</strong> Profissional com década e meia de prática jurídica comprovada.
+              </p>
+            </Card>
+            <Card shadow="sm" padding="md">
+              <p className="text-gray-700">
+                <strong className="text-red-900">Atendimento Personalizado:</strong> Soluções adaptadas aos seus objetivos.
+              </p>
+            </Card>
+            <Card shadow="sm" padding="md">
+              <p className="text-gray-700">
+                <strong className="text-red-900">Confidencialidade:</strong> Sigilo profissional garantido em todas as gestões.
+              </p>
+            </Card>
+            <Card shadow="sm" padding="md">
+              <p className="text-gray-700">
+                <strong className="text-red-900">Resultados:</strong> Compromisso com soluções efetivas para seus problemas jurídicos.
+              </p>
+            </Card>
+          </div>
+        </section>
+
+        <section className="text-center bg-gray-50 rounded-lg p-8 border border-gray-200">
+          <h2 className="text-3xl font-bold text-black mb-4">Pronto para uma consulta?</h2>
+          <p className="text-gray-700 mb-6 max-w-2xl mx-auto">
+            Entre em contato conosco para agendar uma consulta inicial gratuita.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Button
+            variant="primary"
+            size="lg"
+            onClick={handleCtaClick}
+            className="bg-red-900 hover:bg-red-800"
           >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs/pages/getting-started?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+            Agende agora
+          </Button>
+        </section>
       </main>
+
+      <Footer />
     </div>
   );
 }
+
+export const getStaticProps: GetStaticProps<HomeProps> = async () => {
+  return {
+    props: {
+      title: 'DavidVianna Advocacia',
+    },
+    revalidate: 3600,
+  };
+};
