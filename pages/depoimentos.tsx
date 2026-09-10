@@ -83,7 +83,7 @@ export default function Depoimentos({ depoimentos }: DepoimentosProps): React.Re
 
 export const getStaticProps: GetStaticProps<DepoimentosProps> = async () => {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://davidviannaadv-backend.onrender.com/api';
     const response = await axios.get(`${apiUrl}/depoimentos`);
 
     return {
