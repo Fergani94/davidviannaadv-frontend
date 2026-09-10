@@ -92,7 +92,7 @@ export default function DepoimentoSubmit({ token }: DepoimentoTokenProps): React
     }));
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://davidviannaadv-backend.onrender.com/api';
       const response = await axios.post(`${apiUrl}/depoimentos/submit`, {
         token,
         cliente_nome: formState.cliente_nome,

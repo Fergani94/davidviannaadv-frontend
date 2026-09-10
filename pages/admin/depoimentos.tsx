@@ -40,7 +40,7 @@ export default function AdminDepoimentos({ token }: AdminDepoimentosProps): Reac
     setErrorMessage('');
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://davidviannaadv-backend.onrender.com/api';
       const params = new URLSearchParams();
 
       if (statusFilter !== 'todos') {
@@ -80,7 +80,7 @@ export default function AdminDepoimentos({ token }: AdminDepoimentosProps): Reac
 
   const handleStatusUpdate = async (depoimentoId: string, newStatus: 'aprovado' | 'rejeitado'): Promise<void> => {
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://davidviannaadv-backend.onrender.com/api';
 
       await axios.put(
         `${apiUrl}/admin/depoimentos/${depoimentoId}`,

@@ -124,7 +124,7 @@ export default function Contato({ title }: ContatoProps): React.ReactElement {
     }));
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://davidviannaadv-backend.onrender.com/api';
       const response = await axios.post(`${apiUrl}/contato`, {
         nome: formState.nome,
         telefone: formState.telefone,
