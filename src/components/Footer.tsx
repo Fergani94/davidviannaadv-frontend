@@ -26,24 +26,24 @@ export default function Footer({
   ],
 }: FooterProps) {
   return (
-    <footer className="bg-black text-white py-12">
+    <footer className="bg-black text-white py-12 border-t border-white/10">
       <div className="max-w-7xl mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div>
-            <h3 className="text-2xl font-bold text-red-700 mb-4">{companyName}</h3>
+            <h3 className="text-2xl font-bold text-[var(--prata)] mb-4">{companyName}</h3>
             <p className="text-gray-400 text-sm">
               Soluções jurídicas de excelência para o seu negócio.
             </p>
           </div>
 
           <div>
-            <h4 className="font-bold mb-4 text-red-700">Links Rápidos</h4>
+            <h4 className="font-bold mb-4 text-[var(--prata)] uppercase tracking-widest text-sm">Links Rápidos</h4>
             <ul className="space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-gray-400 hover:text-red-700 transition-colors duration-200 text-sm"
+                    className="text-gray-400 hover:text-white transition-colors duration-200 text-sm"
                   >
                     {link.label}
                   </Link>
@@ -53,7 +53,7 @@ export default function Footer({
           </div>
 
           <div>
-            <h4 className="font-bold mb-4 text-red-700">Contato</h4>
+            <h4 className="font-bold mb-4 text-[var(--prata)] uppercase tracking-widest text-sm">Contato</h4>
             <ul className="space-y-2 text-gray-400 text-sm">
               <li>Email: {email}</li>
               <li>Telefone: {phone}</li>
@@ -62,7 +62,7 @@ export default function Footer({
           </div>
 
           <div>
-            <h4 className="font-bold mb-4 text-red-700">Redes Sociais</h4>
+            <h4 className="font-bold mb-4 text-[var(--prata)] uppercase tracking-widest text-sm">Redes Sociais</h4>
             <div className="flex gap-4">
               {socialLinks.map((link) => (
                 <a
@@ -70,7 +70,7 @@ export default function Footer({
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-red-700 transition-colors duration-200"
+                  className="text-gray-400 hover:text-white transition-colors duration-200"
                   title={link.label}
                 >
                   {link.icon}
@@ -80,7 +80,7 @@ export default function Footer({
           </div>
         </div>
 
-        <hr className="border-gray-700 mb-4" />
+        <hr className="border-white/10 mb-4" />
 
         <div className="text-center text-gray-400 text-sm">
           <p>&copy; {new Date().getFullYear()} {companyName}. Todos os direitos reservados.</p>

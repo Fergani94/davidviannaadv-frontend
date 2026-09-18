@@ -1,26 +1,30 @@
-import { GetStaticProps } from 'next';
 import React from 'react';
 import Navbar from '../src/components/Navbar';
 import Header from '../src/components/Header';
 import Card from '../src/components/Card';
 import Button from '../src/components/Button';
 import Footer from '../src/components/Footer';
+import { ServiceFlipCycler } from '../src/components/ui/service-flip-cycler';
 
-interface HomeProps {
-  title: string;
-}
+const SERVICE_NAMES = ['Direito Civil', 'Direito Empresarial', 'Direito Imobiliário'];
 
-export default function Home({ title }: HomeProps): React.ReactElement {
+const SERVICE_DESCRIPTIONS: Record<string, string> = {
+  'Direito Civil': 'Orientação em questões contratuais, responsabilidade civil e resolução de litígios.',
+  'Direito Empresarial': 'Consultoria em constituição, fusões, aquisições e conformidade regulatória.',
+  'Direito Imobiliário': 'Negociação e documentação de operações imobiliárias residenciais e comerciais.',
+};
+
+export default function Home(): React.ReactElement {
   const handleCtaClick = (): void => {
     window.location.href = '/contato';
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-black">
       <Navbar />
 
       <Header
-        title={title}
+        title={<ServiceFlipCycler words={SERVICE_NAMES} className="text-white" />}
         subtitle="Assistência jurídica focada em resultados"
         ctaText="Agende sua consulta"
         onCtaClick={handleCtaClick}
@@ -28,69 +32,51 @@ export default function Home({ title }: HomeProps): React.ReactElement {
 
       <main className="flex-grow max-w-7xl mx-auto px-4 py-16 w-full">
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-black mb-8">Áreas de Atuação</h2>
+          <h2 className="text-3xl font-bold text-white mb-8">Áreas de Atuação</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card shadow="md" padding="lg">
-              <h3 className="text-xl font-bold text-red-900 mb-3">Direito Civil</h3>
-              <p className="text-gray-700 mb-4">
-                Orientação em questões contratuais, responsabilidade civil e resolução de litígios.
-              </p>
-              <Button variant="outline" size="sm" className="w-full">
-                Saiba mais
-              </Button>
-            </Card>
-
-            <Card shadow="md" padding="lg">
-              <h3 className="text-xl font-bold text-red-900 mb-3">Direito Empresarial</h3>
-              <p className="text-gray-700 mb-4">
-                Consultoria em constituição, fusões, aquisições e conformidade regulatória.
-              </p>
-              <Button variant="outline" size="sm" className="w-full">
-                Saiba mais
-              </Button>
-            </Card>
-
-            <Card shadow="md" padding="lg">
-              <h3 className="text-xl font-bold text-red-900 mb-3">Direito Imobiliário</h3>
-              <p className="text-gray-700 mb-4">
-                Negociação e documentação de operações imobiliárias residenciais e comerciais.
-              </p>
-              <Button variant="outline" size="sm" className="w-full">
-                Saiba mais
-              </Button>
-            </Card>
+            {SERVICE_NAMES.map((name) => (
+              <Card key={name} shadow="md" padding="lg">
+                <h3 className="text-xl font-bold text-white text-center mb-3">{name}</h3>
+                <p className="text-gray-400 mb-4">
+                  {SERVICE_DESCRIPTIONS[name]}
+                </p>
+                <Button variant="outline" size="sm" className="w-full">
+                  Saiba mais
+                </Button>
+              </Card>
+            ))}
           </div>
         </section>
 
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-black mb-8">Por que nos escolher</h2>
+          <h2 className="text-3xl font-bold text-white mb-8">Por que nos escolher</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card shadow="sm" padding="md">
-              <p className="text-gray-700">
-                <strong className="text-red-900">Experiência:</strong> Profissional com década e meia de prática jurídica comprovada.
+              <p className="text-gray-400">
+                <strong className="text-[var(--prata)]">Experiência:</strong> Profissional com década e meia de prática jurídica comprovada.
               </p>
             </Card>
             <Card shadow="sm" padding="md">
-              <p className="text-gray-700">
-                <strong className="text-red-900">Atendimento Personalizado:</strong> Soluções adaptadas aos seus objetivos.
+              <p className="text-gray-400">
+                <strong className="text-[var(--prata)]">Atendimento Personalizado:</strong> Soluções adaptadas aos seus objetivos.
               </p>
             </Card>
             <Card shadow="sm" padding="md">
-              <p className="text-gray-700">
-                <strong className="text-red-900">Confidencialidade:</strong> Sigilo profissional garantido em todas as gestões.
+              <p className="text-gray-400">
+                <strong className="text-[var(--prata)]">Confidencialidade:</strong> Sigilo profissional garantido em todas as gestões.
               </p>
             </Card>
             <Card shadow="sm" padding="md">
-              <p className="text-gray-700">
-                <strong className="text-red-900">Resultados:</strong> Compromisso com soluções efetivas para seus problemas jurídicos.
+              <p className="text-gray-400">
+                <strong className="text-[var(--prata)]">Resultados:</strong> Compromisso com soluções efetivas para seus problemas jurídicos.
               </p>
             </Card>
           </div>
         </section>
 
-        <section className="text-center bg-gray-50 rounded-lg p-8 border border-gray-200">
-          <h2 className="text-3xl font-bold text-black mb-4">Pronto para uma consulta?</h2>
-          <p className="text-gray-700 mb-6 max-w-2xl mx-auto">
+        <section className="text-center bg-white/5 rounded-lg p-8 border border-white/10">
+          <h2 className="text-3xl font-bold text-white mb-4">Pronto para uma consulta?</h2>
+          <p className="text-gray-400 mb-6 max-w-2xl mx-auto">
             Entre em contato conosco para agendar uma consulta inicial gratuita.
           </p>
           <Button
@@ -108,12 +94,3 @@ export default function Home({ title }: HomeProps): React.ReactElement {
     </div>
   );
 }
-
-export const getStaticProps: GetStaticProps<HomeProps> = async () => {
-  return {
-    props: {
-      title: 'DavidVianna Advocacia',
-    },
-    revalidate: 3600,
-  };
-};

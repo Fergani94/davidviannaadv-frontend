@@ -142,7 +142,7 @@ export default function DepoimentoSubmit({ token }: DepoimentoTokenProps): React
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-black">
       <Navbar />
 
       <Header
@@ -155,21 +155,21 @@ export default function DepoimentoSubmit({ token }: DepoimentoTokenProps): React
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Success Message */}
             {formState.successMessage && (
-              <div className="p-4 rounded-lg bg-green-50 border border-green-200">
-                <p className="text-green-800 font-semibold">{formState.successMessage}</p>
+              <div className="p-4 rounded-lg bg-green-500/10 border border-green-500/30">
+                <p className="text-green-400 font-semibold">{formState.successMessage}</p>
               </div>
             )}
 
             {/* Error Message */}
             {formState.errorMessage && (
-              <div className="p-4 rounded-lg bg-red-50 border border-red-200">
-                <p className="text-red-800 font-semibold">{formState.errorMessage}</p>
+              <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/30">
+                <p className="text-red-400 font-semibold">{formState.errorMessage}</p>
               </div>
             )}
 
             {/* Nome Field */}
             <div>
-              <label htmlFor="cliente_nome" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="cliente_nome" className="block text-sm font-semibold text-gray-300 mb-2">
                 Seu Nome *
               </label>
               <input
@@ -179,14 +179,14 @@ export default function DepoimentoSubmit({ token }: DepoimentoTokenProps): React
                 value={formState.cliente_nome}
                 onChange={handleInputChange}
                 placeholder="Seu nome completo"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent"
+                className="w-full px-4 py-2 bg-white/5 border border-white/15 text-white placeholder-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--prata)] focus:border-transparent"
                 disabled={formState.isLoading}
               />
             </div>
 
             {/* Profissão Field */}
             <div>
-              <label htmlFor="profissao" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="profissao" className="block text-sm font-semibold text-gray-300 mb-2">
                 Profissão (opcional)
               </label>
               <input
@@ -196,14 +196,14 @@ export default function DepoimentoSubmit({ token }: DepoimentoTokenProps): React
                 value={formState.profissao}
                 onChange={handleInputChange}
                 placeholder="Sua profissão"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent"
+                className="w-full px-4 py-2 bg-white/5 border border-white/15 text-white placeholder-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--prata)] focus:border-transparent"
                 disabled={formState.isLoading}
               />
             </div>
 
             {/* Depoimento Field */}
             <div>
-              <label htmlFor="depoimento" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="depoimento" className="block text-sm font-semibold text-gray-300 mb-2">
                 Seu Depoimento *
               </label>
               <textarea
@@ -213,7 +213,7 @@ export default function DepoimentoSubmit({ token }: DepoimentoTokenProps): React
                 onChange={handleInputChange}
                 placeholder="Compartilhe sua experiência com nossos serviços (mínimo 10 caracteres)"
                 rows={8}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent resize-none"
+                className="w-full px-4 py-2 bg-white/5 border border-white/15 text-white placeholder-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--prata)] focus:border-transparent resize-none"
                 disabled={formState.isLoading}
               />
             </div>
@@ -231,7 +231,7 @@ export default function DepoimentoSubmit({ token }: DepoimentoTokenProps): React
               </Button>
             </div>
 
-            <p className="text-sm text-gray-600 mt-4">
+            <p className="text-sm text-gray-500 mt-4">
               * Campos obrigatórios. Seu depoimento será revisado antes de ser publicado.
             </p>
           </form>

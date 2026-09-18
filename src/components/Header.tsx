@@ -4,7 +4,7 @@ import React from 'react';
 import Button from './Button';
 
 interface HeaderProps {
-  title?: string;
+  title?: React.ReactNode;
   subtitle?: string;
   backgroundImage?: string;
   ctaText?: string;
@@ -29,10 +29,16 @@ export default function Header({
       className="relative h-96 flex items-center justify-center text-white text-center overflow-hidden"
       style={backgroundStyle}
     >
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 opacity-20 animate-[pattern-drift_25s_linear_infinite] motion-reduce:animate-none [background-image:repeating-linear-gradient(45deg,rgba(192,192,192,0.9)_0px,rgba(192,192,192,0.9)_1px,transparent_1px,transparent_16px)]"
+      ></div>
       <div className="absolute inset-0 bg-black/40"></div>
       <div className="relative z-10 max-w-3xl mx-auto px-4">
-        <h1 className="text-5xl font-bold mb-4 text-white">{title}</h1>
-        <p className="text-xl mb-8 text-gray-200">{subtitle}</p>
+        <img src="/logo/dav-logo-mark.png" alt="DAV" className="h-24 w-auto mx-auto mb-6" />
+        <div className="w-16 h-[2px] bg-[var(--prata)] mx-auto mb-6" />
+        <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-4 text-white">{title}</h1>
+        <p className="text-xl mb-8 text-gray-300 tracking-wide">{subtitle}</p>
         <Button
           variant="primary"
           size="lg"

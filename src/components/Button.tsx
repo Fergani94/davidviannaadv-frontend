@@ -22,9 +22,9 @@ export default function Button({
   type = 'button',
 }: ButtonProps) {
   const variantClasses = {
-    primary: 'bg-red-900 text-white hover:bg-red-800 active:bg-red-900',
-    secondary: 'bg-gray-300 text-black hover:bg-gray-400 active:bg-gray-300',
-    outline: 'border-2 border-red-900 text-red-900 hover:bg-red-50 active:bg-white',
+    primary: 'bg-red-900 text-white hover:bg-red-800 active:bg-red-950',
+    secondary: 'bg-white/10 text-white hover:bg-white/20 active:bg-white/10',
+    outline: 'border-2 border-[var(--prata)] text-[var(--prata)] hover:bg-white/10 hover:text-white active:bg-white/5',
   };
 
   const sizeClasses = {

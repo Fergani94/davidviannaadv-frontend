@@ -114,19 +114,19 @@ export default function AdminDepoimentos({ token }: AdminDepoimentosProps): Reac
   const getStatusBadgeColor = (status: string): string => {
     switch (status) {
       case 'aprovado':
-        return 'bg-green-100 text-green-800 border-green-300';
+        return 'bg-green-500/10 text-green-400 border-green-500/30';
       case 'rejeitado':
-        return 'bg-red-100 text-red-800 border-red-300';
+        return 'bg-red-500/10 text-red-400 border-red-500/30';
       case 'pendente':
       default:
-        return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+        return 'bg-yellow-500/10 text-yellow-400 border-yellow-500/30';
     }
   };
 
   const totalPages = Math.ceil(totalCount / itemsPerPage);
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-black">
       <Navbar />
 
       <Header
@@ -137,15 +137,15 @@ export default function AdminDepoimentos({ token }: AdminDepoimentosProps): Reac
       <main className="flex-grow max-w-6xl mx-auto px-4 py-16 w-full">
         {/* Error Message */}
         {errorMessage && (
-          <div className="p-4 rounded-lg bg-red-50 border border-red-200 mb-6">
-            <p className="text-red-800 font-semibold">{errorMessage}</p>
+          <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/30 mb-6">
+            <p className="text-red-400 font-semibold">{errorMessage}</p>
           </div>
         )}
 
         {/* Filter Section */}
         <Card shadow="sm" padding="md" className="mb-6">
           <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
-            <label htmlFor="status-filter" className="block text-sm font-semibold text-gray-700">
+            <label htmlFor="status-filter" className="block text-sm font-semibold text-gray-300">
               Filtrar por Status:
             </label>
             <select
@@ -155,14 +155,14 @@ export default function AdminDepoimentos({ token }: AdminDepoimentosProps): Reac
                 setStatusFilter(e.target.value as any);
                 setCurrentPage(1);
               }}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent"
+              className="px-4 py-2 bg-white/5 border border-white/15 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--prata)] focus:border-transparent"
             >
-              <option value="todos">Todos</option>
-              <option value="pendente">Pendentes</option>
-              <option value="aprovado">Aprovados</option>
-              <option value="rejeitado">Rejeitados</option>
+              <option value="todos" className="bg-black text-white">Todos</option>
+              <option value="pendente" className="bg-black text-white">Pendentes</option>
+              <option value="aprovado" className="bg-black text-white">Aprovados</option>
+              <option value="rejeitado" className="bg-black text-white">Rejeitados</option>
             </select>
-            <span className="text-sm text-gray-600 md:ml-auto">
+            <span className="text-sm text-gray-400 md:ml-auto">
               Total: {totalCount} depoimento(s)
             </span>
           </div>
@@ -171,7 +171,7 @@ export default function AdminDepoimentos({ token }: AdminDepoimentosProps): Reac
         {/* Loading State */}
         {isLoading && (
           <div className="text-center py-12">
-            <p className="text-gray-600 text-lg">Carregando depoimentos...</p>
+            <p className="text-gray-400 text-lg">Carregando depoimentos...</p>
           </div>
         )}
 
@@ -183,17 +183,17 @@ export default function AdminDepoimentos({ token }: AdminDepoimentosProps): Reac
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                   <div className="flex-grow">
                     <div className="flex items-center gap-2 mb-2">
-                      <h3 className="font-bold text-black">{depoimento.cliente_nome}</h3>
+                      <h3 className="font-bold text-white">{depoimento.cliente_nome}</h3>
                       <span className={`px-2 py-1 text-xs font-semibold rounded border ${getStatusBadgeColor(depoimento.status)}`}>
                         {depoimento.status === 'pendente' ? 'Pendente' : depoimento.status === 'aprovado' ? 'Aprovado' : 'Rejeitado'}
                       </span>
                     </div>
 
                     {depoimento.profissao && (
-                      <p className="text-sm text-gray-600 mb-2">{depoimento.profissao}</p>
+                      <p className="text-sm text-gray-400 mb-2">{depoimento.profissao}</p>
                     )}
 
-                    <blockquote className="text-gray-700 italic mb-3">
+                    <blockquote className="text-gray-300 italic mb-3">
                       "{depoimento.depoimento}"
                     </blockquote>
 
@@ -236,7 +236,7 @@ export default function AdminDepoimentos({ token }: AdminDepoimentosProps): Reac
         {/* Empty State */}
         {!isLoading && depoimentos.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-600 text-lg">
+            <p className="text-gray-400 text-lg">
               Nenhum depoimento encontrado com o filtro selecionado.
             </p>
           </div>

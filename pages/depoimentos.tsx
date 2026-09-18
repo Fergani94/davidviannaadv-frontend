@@ -24,7 +24,7 @@ interface DepoimentosProps {
 
 export default function Depoimentos({ depoimentos }: DepoimentosProps): React.ReactElement {
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-black">
       <Navbar />
 
       <Header
@@ -37,13 +37,13 @@ export default function Depoimentos({ depoimentos }: DepoimentosProps): React.Re
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {depoimentos.map((depoimento) => (
               <Card key={depoimento.id} shadow="md" padding="lg" className="flex flex-col">
-                <blockquote className="text-gray-700 italic mb-4 flex-grow">
+                <blockquote className="text-gray-300 italic mb-4 flex-grow">
                   "{depoimento.depoimento}"
                 </blockquote>
-                <div className="border-t border-gray-200 pt-4">
-                  <p className="font-bold text-black">{depoimento.cliente_nome}</p>
+                <div className="border-t border-white/10 pt-4">
+                  <p className="font-bold text-white">{depoimento.cliente_nome}</p>
                   {depoimento.profissao && (
-                    <p className="text-sm text-gray-600">{depoimento.profissao}</p>
+                    <p className="text-sm text-gray-400">{depoimento.profissao}</p>
                   )}
                   <p className="text-xs text-gray-500 mt-2">
                     {new Date(depoimento.criado_em).toLocaleDateString('pt-BR')}
@@ -54,7 +54,7 @@ export default function Depoimentos({ depoimentos }: DepoimentosProps): React.Re
           </div>
         ) : (
           <div className="text-center py-12">
-            <p className="text-gray-600 text-lg mb-6">
+            <p className="text-gray-400 text-lg mb-6">
               Nenhum depoimento aprovado no momento. Seja o primeiro a compartilhar sua experiência!
             </p>
             <Link href="/depoimento/novo">

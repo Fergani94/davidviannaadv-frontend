@@ -30,7 +30,7 @@ export default function Card({
 
   return (
     <div
-      className={`${shadowClasses[shadow]} ${paddingClasses[padding]} rounded-lg bg-white border border-gray-200 ${className}`}
+      className={`${shadowClasses[shadow]} ${paddingClasses[padding]} rounded-lg bg-white/5 border border-white/10 ${className}`}
     >
       {children}
     </div>

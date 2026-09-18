@@ -18,7 +18,7 @@ interface ServicesProps {
 
 export default function Services({ services }: ServicesProps): React.ReactElement {
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-black">
       <Navbar />
 
       <Header
@@ -28,12 +28,12 @@ export default function Services({ services }: ServicesProps): React.ReactElemen
 
       <main className="flex-grow max-w-7xl mx-auto px-4 py-16 w-full">
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-black mb-8">Áreas de Serviços</h2>
+          <h2 className="text-3xl font-bold text-white mb-8">Áreas de Serviços</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
             {services.map((service) => (
               <Card key={service.id} shadow="md" padding="lg">
-                <h3 className="text-2xl font-bold text-red-900 mb-4">{service.title}</h3>
-                <p className="text-gray-700 mb-6 leading-relaxed">
+                <h3 className="text-2xl font-bold text-white text-center mb-4">{service.title}</h3>
+                <p className="text-gray-400 mb-6 leading-relaxed">
                   {service.description}
                 </p>
                 <Button variant="outline" size="md" className="w-full">
@@ -44,49 +44,49 @@ export default function Services({ services }: ServicesProps): React.ReactElemen
           </div>
         </section>
 
-        <section className="bg-gray-50 rounded-lg p-8 border border-gray-200">
-          <h2 className="text-3xl font-bold text-black mb-6">Processo de Atendimento</h2>
+        <section className="bg-white/5 rounded-lg p-8 border border-white/10">
+          <h2 className="text-3xl font-bold text-white mb-6">Processo de Atendimento</h2>
           <div className="space-y-6">
             <div className="flex gap-4">
-              <div className="flex-shrink-0 w-8 h-8 bg-red-900 text-white rounded-full flex items-center justify-center font-bold">
-                1
+              <div className="flex-shrink-0 w-10 h-10 border border-[var(--prata)] text-[var(--prata)] rounded-full flex items-center justify-center font-bold">
+                01
               </div>
               <div>
-                <h3 className="font-bold text-black mb-2">Consulta Inicial</h3>
-                <p className="text-gray-700">
+                <h3 className="font-bold text-white mb-2">Consulta Inicial</h3>
+                <p className="text-gray-400">
                   Apresentação do caso e definição de objetivos.
                 </p>
               </div>
             </div>
             <div className="flex gap-4">
-              <div className="flex-shrink-0 w-8 h-8 bg-red-900 text-white rounded-full flex items-center justify-center font-bold">
-                2
+              <div className="flex-shrink-0 w-10 h-10 border border-[var(--prata)] text-[var(--prata)] rounded-full flex items-center justify-center font-bold">
+                02
               </div>
               <div>
-                <h3 className="font-bold text-black mb-2">Análise Jurídica</h3>
-                <p className="text-gray-700">
+                <h3 className="font-bold text-white mb-2">Análise Jurídica</h3>
+                <p className="text-gray-400">
                   Estudo profundo da situação e identificação de soluções aplicáveis.
                 </p>
               </div>
             </div>
             <div className="flex gap-4">
-              <div className="flex-shrink-0 w-8 h-8 bg-red-900 text-white rounded-full flex items-center justify-center font-bold">
-                3
+              <div className="flex-shrink-0 w-10 h-10 border border-[var(--prata)] text-[var(--prata)] rounded-full flex items-center justify-center font-bold">
+                03
               </div>
               <div>
-                <h3 className="font-bold text-black mb-2">Orientação Estratégica</h3>
-                <p className="text-gray-700">
+                <h3 className="font-bold text-white mb-2">Orientação Estratégica</h3>
+                <p className="text-gray-400">
                   Apresentação de opções com análise de benefícios e riscos.
                 </p>
               </div>
             </div>
             <div className="flex gap-4">
-              <div className="flex-shrink-0 w-8 h-8 bg-red-900 text-white rounded-full flex items-center justify-center font-bold">
-                4
+              <div className="flex-shrink-0 w-10 h-10 border border-[var(--prata)] text-[var(--prata)] rounded-full flex items-center justify-center font-bold">
+                04
               </div>
               <div>
-                <h3 className="font-bold text-black mb-2">Execução</h3>
-                <p className="text-gray-700">
+                <h3 className="font-bold text-white mb-2">Execução</h3>
+                <p className="text-gray-400">
                   Implementação das estratégias acordadas com acompanhamento constante.
                 </p>
               </div>

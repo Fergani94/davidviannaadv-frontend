@@ -178,7 +178,7 @@ export default function Contato({ title }: ContatoProps): React.ReactElement {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-black">
       <Navbar />
 
       <Header
@@ -191,21 +191,21 @@ export default function Contato({ title }: ContatoProps): React.ReactElement {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Success Message */}
             {formState.successMessage && (
-              <div className="p-4 rounded-lg bg-green-50 border border-green-200">
-                <p className="text-green-800 font-semibold">{formState.successMessage}</p>
+              <div className="p-4 rounded-lg bg-green-500/10 border border-green-500/30">
+                <p className="text-green-400 font-semibold">{formState.successMessage}</p>
               </div>
             )}
 
             {/* Error Message */}
             {formState.errorMessage && (
-              <div className="p-4 rounded-lg bg-red-50 border border-red-200">
-                <p className="text-red-800 font-semibold">{formState.errorMessage}</p>
+              <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/30">
+                <p className="text-red-400 font-semibold">{formState.errorMessage}</p>
               </div>
             )}
 
             {/* Nome Field */}
             <div>
-              <label htmlFor="nome" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="nome" className="block text-sm font-semibold text-gray-300 mb-2">
                 Nome *
               </label>
               <input
@@ -215,14 +215,14 @@ export default function Contato({ title }: ContatoProps): React.ReactElement {
                 value={formState.nome}
                 onChange={handleInputChange}
                 placeholder="Seu nome completo"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent"
+                className="w-full px-4 py-2 bg-white/5 border border-white/15 text-white placeholder-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--prata)] focus:border-transparent"
                 disabled={formState.isLoading}
               />
             </div>
 
             {/* Telefone Field */}
             <div>
-              <label htmlFor="telefone" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="telefone" className="block text-sm font-semibold text-gray-300 mb-2">
                 Telefone *
               </label>
               <input
@@ -232,14 +232,14 @@ export default function Contato({ title }: ContatoProps): React.ReactElement {
                 value={formState.telefone}
                 onChange={handleInputChange}
                 placeholder="(XX) XXXXX-XXXX"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent"
+                className="w-full px-4 py-2 bg-white/5 border border-white/15 text-white placeholder-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--prata)] focus:border-transparent"
                 disabled={formState.isLoading}
               />
             </div>
 
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="email" className="block text-sm font-semibold text-gray-300 mb-2">
                 Email *
               </label>
               <input
@@ -249,14 +249,14 @@ export default function Contato({ title }: ContatoProps): React.ReactElement {
                 value={formState.email}
                 onChange={handleInputChange}
                 placeholder="seu@email.com"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent"
+                className="w-full px-4 py-2 bg-white/5 border border-white/15 text-white placeholder-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--prata)] focus:border-transparent"
                 disabled={formState.isLoading}
               />
             </div>
 
             {/* Area de Interesse Field */}
             <div>
-              <label htmlFor="area_interesse" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="area_interesse" className="block text-sm font-semibold text-gray-300 mb-2">
                 Área de Interesse *
               </label>
               <select
@@ -264,11 +264,11 @@ export default function Contato({ title }: ContatoProps): React.ReactElement {
                 name="area_interesse"
                 value={formState.area_interesse}
                 onChange={handleInputChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent"
+                className="w-full px-4 py-2 bg-white/5 border border-white/15 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--prata)] focus:border-transparent"
                 disabled={formState.isLoading}
               >
                 {areasDeInteresse.map(area => (
-                  <option key={area.value} value={area.value}>
+                  <option key={area.value} value={area.value} className="bg-black text-white">
                     {area.label}
                   </option>
                 ))}
@@ -277,7 +277,7 @@ export default function Contato({ title }: ContatoProps): React.ReactElement {
 
             {/* Mensagem Field */}
             <div>
-              <label htmlFor="mensagem" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="mensagem" className="block text-sm font-semibold text-gray-300 mb-2">
                 Mensagem *
               </label>
               <textarea
@@ -287,7 +287,7 @@ export default function Contato({ title }: ContatoProps): React.ReactElement {
                 onChange={handleInputChange}
                 placeholder="Descreva sua situação ou dúvida jurídica"
                 rows={6}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent resize-none"
+                className="w-full px-4 py-2 bg-white/5 border border-white/15 text-white placeholder-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--prata)] focus:border-transparent resize-none"
                 disabled={formState.isLoading}
               />
             </div>
@@ -305,7 +305,7 @@ export default function Contato({ title }: ContatoProps): React.ReactElement {
               </Button>
             </div>
 
-            <p className="text-sm text-gray-600 mt-4">
+            <p className="text-sm text-gray-500 mt-4">
               * Todos os campos são obrigatórios
             </p>
           </form>
@@ -313,16 +313,16 @@ export default function Contato({ title }: ContatoProps): React.ReactElement {
 
         {/* Contact Info Section */}
         <section className="mt-16">
-          <h2 className="text-2xl font-bold text-black mb-8">Outras formas de contato</h2>
+          <h2 className="text-2xl font-bold text-white mb-8">Outras formas de contato</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card shadow="sm" padding="md">
-              <h3 className="font-bold text-red-900 mb-2">Telefone</h3>
-              <p className="text-gray-700">(XX) XXXXX-XXXX</p>
+              <h3 className="font-bold text-[var(--prata)] mb-2">Telefone</h3>
+              <p className="text-gray-400">(XX) XXXXX-XXXX</p>
             </Card>
 
             <Card shadow="sm" padding="md">
-              <h3 className="font-bold text-red-900 mb-2">Email</h3>
-              <p className="text-gray-700">davidviannarj@yahoo.com.br</p>
+              <h3 className="font-bold text-[var(--prata)] mb-2">Email</h3>
+              <p className="text-gray-400">davidviannarj@yahoo.com.br</p>
             </Card>
           </div>
         </section>

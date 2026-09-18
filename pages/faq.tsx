@@ -23,7 +23,7 @@ function FAQPage({ faqs }: FAQProps): React.ReactElement {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-black">
       <Navbar />
 
       <Header
@@ -35,19 +35,19 @@ function FAQPage({ faqs }: FAQProps): React.ReactElement {
         <section className="mb-16">
           <div className="space-y-4">
             {faqs.map((faq) => (
-              <Card key={faq.id} shadow="sm" padding="md" className="border-2 border-gray-200">
+              <Card key={faq.id} shadow="sm" padding="md" className="border-2 border-white/10">
                 <button
                   onClick={() => toggleAccordion(faq.id)}
-                  className="w-full text-left flex justify-between items-center cursor-pointer hover:text-red-900 transition-colors"
+                  className="w-full text-left flex justify-between items-center cursor-pointer hover:text-[var(--prata)] transition-colors"
                 >
-                  <h3 className="text-lg font-bold text-black">{faq.question}</h3>
-                  <span className={`text-red-900 font-bold transition-transform ${openId === faq.id ? 'rotate-180' : ''}`}>
+                  <h3 className="text-lg font-bold text-white">{faq.question}</h3>
+                  <span className={`text-[var(--prata)] font-bold transition-transform ${openId === faq.id ? 'rotate-180' : ''}`}>
                     ▼
                   </span>
                 </button>
                 {openId === faq.id && (
-                  <div className="mt-4 pt-4 border-t border-gray-200">
-                    <p className="text-gray-700 leading-relaxed whitespace-pre-line">{faq.answer}</p>
+                  <div className="mt-4 pt-4 border-t border-white/10">
+                    <p className="text-gray-400 leading-relaxed whitespace-pre-line">{faq.answer}</p>
                   </div>
                 )}
               </Card>
@@ -55,9 +55,9 @@ function FAQPage({ faqs }: FAQProps): React.ReactElement {
           </div>
         </section>
 
-        <section className="bg-gray-50 rounded-lg p-8 border border-gray-200 text-center">
-          <h2 className="text-2xl font-bold text-black mb-4">Não encontrou sua pergunta?</h2>
-          <p className="text-gray-700 mb-6">
+        <section className="bg-white/5 rounded-lg p-8 border border-white/10 text-center">
+          <h2 className="text-2xl font-bold text-white mb-4">Não encontrou sua pergunta?</h2>
+          <p className="text-gray-400 mb-6">
             Entre em contato conosco para esclarecer qualquer dúvida adicional.
           </p>
           <a
