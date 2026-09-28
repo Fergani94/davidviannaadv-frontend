@@ -1,11 +1,11 @@
 import { GetServerSideProps } from 'next';
 import React, { useState } from 'react';
+import Head from 'next/head';
 import axios from 'axios';
+import { ArrowUpRight, Clock3, MapPin, Mail, MessageCircle, Phone, ShieldCheck } from 'lucide-react';
 import Navbar from '../src/components/Navbar';
-import Header from '../src/components/Header';
-import Card from '../src/components/Card';
-import Button from '../src/components/Button';
 import Footer from '../src/components/Footer';
+import { API_BASE_URL, AREAS_ATUACAO, CONTACT_EMAIL, ENDERECO, TELEFONE, WHATSAPP_1 } from '../lib/constants';
 
 interface ContatoProps {
   title: string;
@@ -25,107 +25,60 @@ interface FormState extends FormData {
   errorMessage: string;
 }
 
-const areasDeInteresse = [
-  { value: '', label: 'Selecione uma área...' },
-  { value: 'direito_civil', label: 'Direito Civil' },
-  { value: 'direito_empresarial', label: 'Direito Empresarial' },
-  { value: 'direito_imobiliario', label: 'Direito Imobiliário' },
-  { value: 'direito_outro', label: 'Outra' },
-];
+const initialForm: FormState = {
+  nome: '',
+  telefone: '',
+  email: '',
+  area_interesse: '',
+  mensagem: '',
+  isLoading: false,
+  successMessage: '',
+  errorMessage: '',
+};
 
 export default function Contato({ title }: ContatoProps): React.ReactElement {
-  const [formState, setFormState] = useState<FormState>({
-    nome: '',
-    telefone: '',
-    email: '',
-    area_interesse: '',
-    mensagem: '',
-    isLoading: false,
-    successMessage: '',
-    errorMessage: '',
-  });
+  const [formState, setFormState] = useState<FormState>(initialForm);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ): void => {
     const { name, value } = e.target;
-    setFormState(prevState => ({
-      ...prevState,
-      [name]: value,
-      errorMessage: '', // Clear error message when user types
-    }));
+    setFormState((prev) => ({ ...prev, [name]: value, errorMessage: '' }));
   };
 
   const validateForm = (): boolean => {
     if (!formState.nome.trim()) {
-      setFormState(prevState => ({
-        ...prevState,
-        errorMessage: 'Por favor, insira seu nome',
-      }));
+      setFormState((prev) => ({ ...prev, errorMessage: 'Por favor, insira seu nome' }));
       return false;
     }
-
     if (!formState.telefone.trim()) {
-      setFormState(prevState => ({
-        ...prevState,
-        errorMessage: 'Por favor, insira seu telefone',
-      }));
+      setFormState((prev) => ({ ...prev, errorMessage: 'Por favor, insira seu telefone' }));
       return false;
     }
-
-    if (!formState.email.trim()) {
-      setFormState(prevState => ({
-        ...prevState,
-        errorMessage: 'Por favor, insira seu email',
-      }));
-      return false;
-    }
-
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formState.email)) {
-      setFormState(prevState => ({
-        ...prevState,
-        errorMessage: 'Por favor, insira um email válido',
-      }));
+      setFormState((prev) => ({ ...prev, errorMessage: 'Por favor, insira um email válido' }));
       return false;
     }
-
     if (!formState.area_interesse) {
-      setFormState(prevState => ({
-        ...prevState,
-        errorMessage: 'Por favor, selecione uma área de interesse',
-      }));
+      setFormState((prev) => ({ ...prev, errorMessage: 'Por favor, selecione uma área de interesse' }));
       return false;
     }
-
     if (!formState.mensagem.trim()) {
-      setFormState(prevState => ({
-        ...prevState,
-        errorMessage: 'Por favor, insira sua mensagem',
-      }));
+      setFormState((prev) => ({ ...prev, errorMessage: 'Por favor, insira sua mensagem' }));
       return false;
     }
-
     return true;
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
+    if (!validateForm()) return;
 
-    if (!validateForm()) {
-      return;
-    }
-
-    setFormState(prevState => ({
-      ...prevState,
-      isLoading: true,
-      successMessage: '',
-      errorMessage: '',
-    }));
+    setFormState((prev) => ({ ...prev, isLoading: true, successMessage: '', errorMessage: '' }));
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://davidviannaadv-backend.onrender.com/api';
-      const response = await axios.post(`${apiUrl}/contato`, {
+      const response = await axios.post(`${API_BASE_URL}/contato`, {
         nome: formState.nome,
         telefone: formState.telefone,
         email: formState.email,
@@ -134,196 +87,109 @@ export default function Contato({ title }: ContatoProps): React.ReactElement {
       });
 
       if (response.data.success) {
-        setFormState(prevState => ({
-          ...prevState,
-          nome: '',
-          telefone: '',
-          email: '',
-          area_interesse: '',
-          mensagem: '',
-          isLoading: false,
+        setFormState({
+          ...initialForm,
           successMessage: 'Contato enviado com sucesso! Entraremos em contato em breve.',
-          errorMessage: '',
-        }));
-
-        // Clear success message after 5 seconds
-        setTimeout(() => {
-          setFormState(prevState => ({
-            ...prevState,
-            successMessage: '',
-          }));
-        }, 5000);
+        });
       }
     } catch (error) {
       let errorMessage = 'Erro ao enviar contato. Por favor, tente novamente.';
-
       if (axios.isAxiosError(error)) {
-        if (error.response?.data?.message) {
-          errorMessage = error.response.data.message;
-        } else if (error.response?.status === 400) {
-          errorMessage = 'Por favor, verifique os dados inseridos.';
-        } else if (error.response?.status === 500) {
-          errorMessage = 'Erro no servidor. Por favor, tente novamente mais tarde.';
-        } else if (error.message === 'Network Error') {
-          errorMessage = 'Erro de conexão. Verifique sua internet.';
-        }
+        if (error.response?.data?.error) errorMessage = error.response.data.error;
+        else if (error.response?.status === 400) errorMessage = 'Por favor, verifique os dados inseridos.';
+        else if (error.response?.status === 500) errorMessage = 'Erro no servidor. Por favor, tente novamente mais tarde.';
+        else if (error.message === 'Network Error') errorMessage = 'Erro de conexão. Verifique sua internet.';
       }
-
-      setFormState(prevState => ({
-        ...prevState,
-        isLoading: false,
-        errorMessage,
-      }));
+      setFormState((prev) => ({ ...prev, isLoading: false, errorMessage }));
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-black">
+    <div className="site-shell">
+      <Head>
+        <title>{title}</title>
+      </Head>
+
       <Navbar />
 
-      <Header
-        title="Entre em Contato"
-        subtitle="Envie-nos uma mensagem e entraremos em contato em breve"
-      />
+      <main>
+        <section id="contato" className="contact-section section-pad">
+          <div className="contact-heading">
+            <h2>Converse sobre o seu <em>caso.</em></h2>
+            <p>Atendimento online, de segunda a sexta-feira, em horário comercial, com disponibilidade para emergências.</p>
+          </div>
+          <div className="contact-layout">
+            <form className="contact-form" onSubmit={handleSubmit}>
+              {formState.successMessage && <p className="form-success" role="status">{formState.successMessage}</p>}
+              {formState.errorMessage && <p className="form-error" role="alert">{formState.errorMessage}</p>}
 
-      <main className="flex-grow max-w-4xl mx-auto px-4 py-16 w-full">
-        <Card shadow="md" padding="lg">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Success Message */}
-            {formState.successMessage && (
-              <div className="p-4 rounded-lg bg-green-500/10 border border-green-500/30">
-                <p className="text-green-400 font-semibold">{formState.successMessage}</p>
+              <div className="form-row">
+                <label>Nome
+                  <input required name="nome" autoComplete="name" placeholder="Seu nome" value={formState.nome} onChange={handleInputChange} disabled={formState.isLoading} />
+                </label>
+                <label>Telefone
+                  <input required name="telefone" type="tel" autoComplete="tel" placeholder="(00) 00000-0000" value={formState.telefone} onChange={handleInputChange} disabled={formState.isLoading} />
+                </label>
               </div>
-            )}
-
-            {/* Error Message */}
-            {formState.errorMessage && (
-              <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/30">
-                <p className="text-red-400 font-semibold">{formState.errorMessage}</p>
+              <label>E-mail
+                <input required name="email" type="email" autoComplete="email" placeholder="seuemail@exemplo.com" value={formState.email} onChange={handleInputChange} disabled={formState.isLoading} />
+              </label>
+              <label>Área de interesse
+                <select required name="area_interesse" value={formState.area_interesse} onChange={handleInputChange} disabled={formState.isLoading}>
+                  <option value="" disabled>Selecione uma área</option>
+                  {AREAS_ATUACAO.map((area) => (
+                    <option key={area.title} value={area.title}>{area.title}</option>
+                  ))}
+                </select>
+              </label>
+              <label>Mensagem
+                <textarea required name="mensagem" rows={5} placeholder="Descreva brevemente como posso ajudar." value={formState.mensagem} onChange={handleInputChange} disabled={formState.isLoading} />
+              </label>
+              <p className="lgpd-notice"><ShieldCheck size={15} /> Seus dados serão usados apenas para responder sua mensagem.</p>
+              <button className="button button--black" type="submit" disabled={formState.isLoading}>
+                {formState.isLoading ? 'Enviando...' : 'Enviar mensagem'} <ArrowUpRight size={17} />
+              </button>
+            </form>
+            <aside className="contact-details">
+              <div className="contact-emblem">
+                <img src="/logo/dav-logo-mark.png" alt="David Areias Vianna" />
               </div>
-            )}
-
-            {/* Nome Field */}
-            <div>
-              <label htmlFor="nome" className="block text-sm font-semibold text-gray-300 mb-2">
-                Nome *
-              </label>
-              <input
-                type="text"
-                id="nome"
-                name="nome"
-                value={formState.nome}
-                onChange={handleInputChange}
-                placeholder="Seu nome completo"
-                className="w-full px-4 py-2 bg-white/5 border border-white/15 text-white placeholder-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--prata)] focus:border-transparent"
-                disabled={formState.isLoading}
-              />
-            </div>
-
-            {/* Telefone Field */}
-            <div>
-              <label htmlFor="telefone" className="block text-sm font-semibold text-gray-300 mb-2">
-                Telefone *
-              </label>
-              <input
-                type="tel"
-                id="telefone"
-                name="telefone"
-                value={formState.telefone}
-                onChange={handleInputChange}
-                placeholder="(XX) XXXXX-XXXX"
-                className="w-full px-4 py-2 bg-white/5 border border-white/15 text-white placeholder-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--prata)] focus:border-transparent"
-                disabled={formState.isLoading}
-              />
-            </div>
-
-            {/* Email Field */}
-            <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-gray-300 mb-2">
-                Email *
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formState.email}
-                onChange={handleInputChange}
-                placeholder="seu@email.com"
-                className="w-full px-4 py-2 bg-white/5 border border-white/15 text-white placeholder-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--prata)] focus:border-transparent"
-                disabled={formState.isLoading}
-              />
-            </div>
-
-            {/* Area de Interesse Field */}
-            <div>
-              <label htmlFor="area_interesse" className="block text-sm font-semibold text-gray-300 mb-2">
-                Área de Interesse *
-              </label>
-              <select
-                id="area_interesse"
-                name="area_interesse"
-                value={formState.area_interesse}
-                onChange={handleInputChange}
-                className="w-full px-4 py-2 bg-white/5 border border-white/15 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--prata)] focus:border-transparent"
-                disabled={formState.isLoading}
-              >
-                {areasDeInteresse.map(area => (
-                  <option key={area.value} value={area.value} className="bg-black text-white">
-                    {area.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Mensagem Field */}
-            <div>
-              <label htmlFor="mensagem" className="block text-sm font-semibold text-gray-300 mb-2">
-                Mensagem *
-              </label>
-              <textarea
-                id="mensagem"
-                name="mensagem"
-                value={formState.mensagem}
-                onChange={handleInputChange}
-                placeholder="Descreva sua situação ou dúvida jurídica"
-                rows={6}
-                className="w-full px-4 py-2 bg-white/5 border border-white/15 text-white placeholder-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--prata)] focus:border-transparent resize-none"
-                disabled={formState.isLoading}
-              />
-            </div>
-
-            {/* Submit Button */}
-            <div className="flex gap-4 pt-4">
-              <Button
-                type="submit"
-                variant="primary"
-                size="lg"
-                disabled={formState.isLoading}
-                className={formState.isLoading ? 'opacity-50 cursor-not-allowed' : ''}
-              >
-                {formState.isLoading ? 'Enviando...' : 'Enviar Contato'}
-              </Button>
-            </div>
-
-            <p className="text-sm text-gray-500 mt-4">
-              * Todos os campos são obrigatórios
-            </p>
-          </form>
-        </Card>
-
-        {/* Contact Info Section */}
-        <section className="mt-16">
-          <h2 className="text-2xl font-bold text-white mb-8">Outras formas de contato</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card shadow="sm" padding="md">
-              <h3 className="font-bold text-[var(--prata)] mb-2">Telefone</h3>
-              <p className="text-gray-400">(XX) XXXXX-XXXX</p>
-            </Card>
-
-            <Card shadow="sm" padding="md">
-              <h3 className="font-bold text-[var(--prata)] mb-2">Email</h3>
-              <p className="text-gray-400">davidviannarj@yahoo.com.br</p>
-            </Card>
+              <div className="contact-line">
+                <MessageCircle size={18} />
+                <div>
+                  <small>WhatsApp</small>
+                  <a href={WHATSAPP_1.href} target="_blank" rel="noreferrer">{WHATSAPP_1.label}</a>
+                </div>
+              </div>
+              <div className="contact-line">
+                <Phone size={18} />
+                <div>
+                  <small>Telefone</small>
+                  <a href={TELEFONE.href}>{TELEFONE.label}</a>
+                </div>
+              </div>
+              <div className="contact-line">
+                <MapPin size={18} />
+                <div>
+                  <small>Endereço</small>
+                  <p>{ENDERECO}</p>
+                </div>
+              </div>
+              <div className="contact-line">
+                <Mail size={18} />
+                <div>
+                  <small>E-mail</small>
+                  <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+                </div>
+              </div>
+              <div className="contact-line">
+                <Clock3 size={18} />
+                <div>
+                  <small>Atendimento</small>
+                  <p>Online · segunda a sexta<br />Horário comercial</p>
+                </div>
+              </div>
+            </aside>
           </div>
         </section>
       </main>
@@ -336,7 +202,7 @@ export default function Contato({ title }: ContatoProps): React.ReactElement {
 export const getServerSideProps: GetServerSideProps<ContatoProps> = async () => {
   return {
     props: {
-      title: 'Contato - DavidVianna Advocacia',
+      title: 'Contato — David Areias Vianna Advocacia',
     },
   };
 };

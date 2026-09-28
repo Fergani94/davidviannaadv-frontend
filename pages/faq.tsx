@@ -1,71 +1,50 @@
 import { GetStaticProps } from 'next';
 import React, { useState } from 'react';
+import Head from 'next/head';
+import { ChevronDown } from 'lucide-react';
 import Navbar from '../src/components/Navbar';
-import Header from '../src/components/Header';
-import Card from '../src/components/Card';
 import Footer from '../src/components/Footer';
-
-interface FAQItem {
-  id: number;
-  question: string;
-  answer: string;
-}
+import { FAQS } from '../lib/constants';
 
 interface FAQProps {
-  faqs: FAQItem[];
+  title: string;
 }
 
-function FAQPage({ faqs }: FAQProps): React.ReactElement {
-  const [openId, setOpenId] = useState<number | null>(null);
-
-  const toggleAccordion = (id: number): void => {
-    setOpenId(openId === id ? null : id);
-  };
+function FAQPage({ title }: FAQProps): React.ReactElement {
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <div className="min-h-screen flex flex-col bg-black">
+    <div className="site-shell">
+      <Head>
+        <title>{title}</title>
+      </Head>
+
       <Navbar />
 
-      <Header
-        title="Perguntas Frequentes"
-        subtitle="Respostas às dúvidas mais comuns"
-      />
-
-      <main className="flex-grow max-w-4xl mx-auto px-4 py-16 w-full">
-        <section className="mb-16">
-          <div className="space-y-4">
-            {faqs.map((faq) => (
-              <Card key={faq.id} shadow="sm" padding="md" className="border-2 border-white/10">
-                <button
-                  onClick={() => toggleAccordion(faq.id)}
-                  className="w-full text-left flex justify-between items-center cursor-pointer hover:text-[var(--prata)] transition-colors"
-                >
-                  <h3 className="text-lg font-bold text-white">{faq.question}</h3>
-                  <span className={`text-[var(--prata)] font-bold transition-transform ${openId === faq.id ? 'rotate-180' : ''}`}>
-                    ▼
-                  </span>
-                </button>
-                {openId === faq.id && (
-                  <div className="mt-4 pt-4 border-t border-white/10">
-                    <p className="text-gray-400 leading-relaxed whitespace-pre-line">{faq.answer}</p>
+      <main>
+        <section id="faq" className="faq-section section-pad">
+          <div className="content-grid faq-grid">
+            <div className="faq-intro">
+              <h2>Informação clara desde o <em>primeiro contato.</em></h2>
+              <p>
+                O atendimento é conduzido com objetividade, sem antecipação de resultados e com respeito
+                às particularidades de cada situação.
+              </p>
+            </div>
+            <div className="faq-list">
+              {FAQS.map((faq, index) => {
+                const isOpen = openIndex === index;
+                return (
+                  <div className={isOpen ? 'faq-item faq-item--open' : 'faq-item'} key={faq.question}>
+                    <button type="button" onClick={() => setOpenIndex(isOpen ? null : index)} aria-expanded={isOpen}>
+                      <span>{faq.question}</span><ChevronDown size={20} />
+                    </button>
+                    <div className="faq-answer"><p>{faq.answer}</p></div>
                   </div>
-                )}
-              </Card>
-            ))}
+                );
+              })}
+            </div>
           </div>
-        </section>
-
-        <section className="bg-white/5 rounded-lg p-8 border border-white/10 text-center">
-          <h2 className="text-2xl font-bold text-white mb-4">Não encontrou sua pergunta?</h2>
-          <p className="text-gray-400 mb-6">
-            Entre em contato conosco para esclarecer qualquer dúvida adicional.
-          </p>
-          <a
-            href="/contato"
-            className="inline-block bg-red-900 text-white px-8 py-3 rounded-lg hover:bg-red-800 transition-colors font-semibold"
-          >
-            Entre em contato
-          </a>
         </section>
       </main>
 
@@ -75,33 +54,12 @@ function FAQPage({ faqs }: FAQProps): React.ReactElement {
 }
 
 export const getStaticProps: GetStaticProps<FAQProps> = async () => {
-  const faqs: FAQItem[] = [
-    {
-      id: 1,
-      question: 'Como funciona a consulta inicial?',
-      answer:
-        'A consulta inicial é um encontro onde você apresenta sua situação jurídica e objetivos. Durante este encontro, analisamos os aspectos principais do seu caso e discutimos as possíveis estratégias e soluções aplicáveis. Este momento nos permite compreender melhor suas necessidades e apresentar as opções disponíveis.',
-    },
-    {
-      id: 2,
-      question: 'Quais são as formas de pagamento dos serviços?',
-      answer:
-        'Oferecemos diferentes modalidades de honorários, incluindo valor fixo por serviço, honorários por hora trabalhada ou acordos específicos conforme a natureza do caso. Discutiremos as opções mais adequadas à sua situação durante a consulta inicial.',
-    },
-    {
-      id: 3,
-      question: 'Como é garantida a confidencialidade do meu caso?',
-      answer:
-        'O sigilo profissional é um princípio fundamental da profissão jurídica. Todos os dados, informações e documentos relacionados ao seu caso são protegidos pelo dever de confidencialidade previsto no Código de Ética Profissional da Ordem dos Advogados do Brasil. Esse direito é inviolável e garantido legalmente.',
-    },
-  ];
-
   return {
     props: {
-      faqs,
+      title: 'Perguntas Frequentes — David Areias Vianna Advocacia',
     },
-    revalidate: 3600,
+    revalidate: 86400,
   };
-}
+};
 
 export default FAQPage;

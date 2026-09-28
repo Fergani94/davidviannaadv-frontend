@@ -2,70 +2,50 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { ArrowUpRight, Menu, MessageCircle, X } from 'lucide-react';
+import { NAV_LINKS, OAB, WHATSAPP_1 } from '@/lib/constants';
 
-interface NavbarProps {
-  menuItems?: Array<{ label: string; href: string }>;
-  onMenuItemClick?: (href: string) => void;
-}
-
-export default function Navbar({
-  menuItems = [
-    { label: 'Home', href: '/' },
-    { label: 'Sobre', href: '/sobre' },
-    { label: 'Serviços', href: '/servicos' },
-    { label: 'Contato', href: '/contato' },
-  ],
-  onMenuItemClick,
-}: NavbarProps) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleMenuItemClick = (href: string) => {
-    setIsOpen(false);
-    onMenuItemClick?.(href);
-  };
+export default function Navbar() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const router = useRouter();
+  const closeMenu = () => setMenuOpen(false);
 
   return (
-    <nav className="bg-black text-white border-b border-white/10">
-      <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-        <img src="/logo/dav-logo-mark.png" alt="DAV" className="h-10 w-auto" />
+    <header className="site-header">
+      <Link className="brand" href="/" aria-label="David Areias Vianna — início" onClick={closeMenu}>
+        <img className="brand-logo" src="/logo/dav-logo-mark.png" alt="David Areias Vianna" />
+        <span className="brand-copy">
+          <strong>David Areias Vianna</strong>
+          <small>{OAB}</small>
+        </span>
+      </Link>
 
-        <button
-          className="md:hidden text-white"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          ☰
-        </button>
+      <button
+        className="menu-toggle"
+        type="button"
+        aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
+        aria-expanded={menuOpen}
+        onClick={() => setMenuOpen((open) => !open)}
+      >
+        {menuOpen ? <X size={22} /> : <Menu size={22} />}
+      </button>
 
-        <div className={`hidden md:flex gap-8`}>
-          {menuItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-sm uppercase tracking-widest text-gray-300 hover:text-[var(--prata)] transition-colors duration-200"
-              onClick={() => onMenuItemClick?.(item.href)}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </div>
-
-        {isOpen && (
-          <div className="absolute top-16 left-0 right-0 bg-black border-b border-white/10 md:hidden">
-            <div className="flex flex-col gap-4 p-4">
-              {menuItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="text-sm uppercase tracking-widest text-gray-300 hover:text-[var(--prata)] transition-colors duration-200"
-                  onClick={() => handleMenuItemClick(item.href)}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-    </nav>
+      <nav className={menuOpen ? 'site-nav site-nav--open' : 'site-nav'} aria-label="Navegação principal">
+        {NAV_LINKS.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            className={router.pathname === link.href ? 'active' : undefined}
+            onClick={closeMenu}
+          >
+            {link.label}
+          </Link>
+        ))}
+        <a className="nav-whatsapp" href={WHATSAPP_1.href} target="_blank" rel="noreferrer" onClick={closeMenu}>
+          <MessageCircle size={14} /> WhatsApp <ArrowUpRight size={14} />
+        </a>
+      </nav>
+    </header>
   );
 }

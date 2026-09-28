@@ -1,96 +1,61 @@
 import { GetStaticProps } from 'next';
 import React from 'react';
+import Head from 'next/head';
+import { ArrowUpRight, Check } from 'lucide-react';
 import Navbar from '../src/components/Navbar';
-import Header from '../src/components/Header';
-import Card from '../src/components/Card';
-import Button from '../src/components/Button';
 import Footer from '../src/components/Footer';
+import { AREAS_ATUACAO, SERVICOS } from '../lib/constants';
 
-interface Service {
-  id: number;
+interface ServicosProps {
   title: string;
-  description: string;
 }
 
-interface ServicesProps {
-  services: Service[];
-}
-
-export default function Services({ services }: ServicesProps): React.ReactElement {
+export default function Servicos({ title }: ServicosProps): React.ReactElement {
   return (
-    <div className="min-h-screen flex flex-col bg-black">
+    <div className="site-shell">
+      <Head>
+        <title>{title}</title>
+      </Head>
+
       <Navbar />
 
-      <Header
-        title="Nossos Serviços"
-        subtitle="Soluções jurídicas abrangentes para seus negócios"
-      />
+      <main>
+        <section id="atuacao" className="practice-section section-pad">
+          <div className="content-grid practice-heading">
+            <div>
+              <h2>Atuação direcionada a questões <em>concretas.</em></h2>
+            </div>
+            <p>
+              A análise começa pela compreensão precisa da necessidade apresentada. Conheça as áreas em
+              que o atendimento é prestado.
+            </p>
+          </div>
 
-      <main className="flex-grow max-w-7xl mx-auto px-4 py-16 w-full">
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold text-white mb-8">Áreas de Serviços</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-            {services.map((service) => (
-              <Card key={service.id} shadow="md" padding="lg">
-                <h3 className="text-2xl font-bold text-white text-center mb-4">{service.title}</h3>
-                <p className="text-gray-400 mb-6 leading-relaxed">
-                  {service.description}
-                </p>
-                <Button variant="outline" size="md" className="w-full">
-                  Solicitar informações
-                </Button>
-              </Card>
+          <div className="areas-grid">
+            {AREAS_ATUACAO.map((area) => (
+              <article className={area.featured ? 'area-card area-card--featured' : 'area-card'} key={area.title}>
+                <div className="area-card-top"><ArrowUpRight size={19} /></div>
+                <h3>{area.title}</h3>
+                <p>{area.description}</p>
+              </article>
             ))}
           </div>
         </section>
 
-        <section className="bg-white/5 rounded-lg p-8 border border-white/10">
-          <h2 className="text-3xl font-bold text-white mb-6">Processo de Atendimento</h2>
-          <div className="space-y-6">
-            <div className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 border border-[var(--prata)] text-[var(--prata)] rounded-full flex items-center justify-center font-bold">
-                01
-              </div>
-              <div>
-                <h3 className="font-bold text-white mb-2">Consulta Inicial</h3>
-                <p className="text-gray-400">
-                  Apresentação do caso e definição de objetivos.
-                </p>
-              </div>
+        <section className="services-section">
+          <div className="content-grid services-grid">
+            <div className="services-intro">
+              <h2>Orientação jurídica com escopo <em>definido.</em></h2>
+              <p>
+                O atendimento contempla análise, parecer, elaboração de instrumentos e diligências,
+                sempre conforme a necessidade concreta do caso.
+              </p>
             </div>
-            <div className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 border border-[var(--prata)] text-[var(--prata)] rounded-full flex items-center justify-center font-bold">
-                02
-              </div>
-              <div>
-                <h3 className="font-bold text-white mb-2">Análise Jurídica</h3>
-                <p className="text-gray-400">
-                  Estudo profundo da situação e identificação de soluções aplicáveis.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 border border-[var(--prata)] text-[var(--prata)] rounded-full flex items-center justify-center font-bold">
-                03
-              </div>
-              <div>
-                <h3 className="font-bold text-white mb-2">Orientação Estratégica</h3>
-                <p className="text-gray-400">
-                  Apresentação de opções com análise de benefícios e riscos.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 border border-[var(--prata)] text-[var(--prata)] rounded-full flex items-center justify-center font-bold">
-                04
-              </div>
-              <div>
-                <h3 className="font-bold text-white mb-2">Execução</h3>
-                <p className="text-gray-400">
-                  Implementação das estratégias acordadas com acompanhamento constante.
-                </p>
-              </div>
-            </div>
+            <ul className="service-list">
+              {SERVICOS.map((service) => (
+                <li key={service}><Check size={16} /> {service}</li>
+              ))}
+            </ul>
           </div>
         </section>
       </main>
@@ -100,56 +65,11 @@ export default function Services({ services }: ServicesProps): React.ReactElemen
   );
 }
 
-export const getStaticProps: GetStaticProps<ServicesProps> = async () => {
-  const services: Service[] = [
-    {
-      id: 1,
-      title: 'Contratos e Acordos',
-      description:
-        'Elaboração, revisão e negociação de contratos comerciais, trabalhistas e pessoais com observância das normas legais vigentes.',
-    },
-    {
-      id: 2,
-      title: 'Direito Imobiliário',
-      description:
-        'Assistência em compra, venda, aluguel e operações imobiliárias, incluindo análise de documentação e regularização de imóveis.',
-    },
-    {
-      id: 3,
-      title: 'Direito Civil',
-      description:
-        'Orientação em questões de responsabilidade civil, danos patrimoniais e pessoais, e resolução de conflitos entre partes.',
-    },
-    {
-      id: 4,
-      title: 'Direito Empresarial',
-      description:
-        'Consultoria para constituição de empresas, fusões, aquisições, conformidade regulatória e questões administrativas.',
-    },
-    {
-      id: 5,
-      title: 'Litígios e Demandas',
-      description:
-        'Representação em processos judiciais, mediação e arbitragem para resolução de conflitos de forma eficiente.',
-    },
-    {
-      id: 6,
-      title: 'Consultoria Jurídica',
-      description:
-        'Orientação preventiva em questões legais para evitar problemas futuros e garantir conformidade com legislação aplicável.',
-    },
-    {
-      id: 7,
-      title: 'Documentação Legal',
-      description:
-        'Preparação e formalização de documentos legais diversos, testamentos, procurações e outros atos notariais.',
-    },
-  ];
-
+export const getStaticProps: GetStaticProps<ServicosProps> = async () => {
   return {
     props: {
-      services,
+      title: 'Áreas de Atuação e Serviços — David Areias Vianna Advocacia',
     },
-    revalidate: 3600,
+    revalidate: 86400,
   };
 };

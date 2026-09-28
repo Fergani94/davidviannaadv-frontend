@@ -1,148 +1,163 @@
 import { GetServerSideProps } from 'next';
-import React, { useState, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
 import axios from 'axios';
 import Navbar from '../../src/components/Navbar';
 import Header from '../../src/components/Header';
 import Card from '../../src/components/Card';
 import Button from '../../src/components/Button';
 import Footer from '../../src/components/Footer';
+import { API_BASE_URL } from '../../lib/constants';
 
 interface Depoimento {
   id: string;
-  cliente_nome: string;
-  depoimento: string;
-  profissao?: string;
+  nome: string;
+  texto: string;
   status: 'pendente' | 'aprovado' | 'rejeitado';
-  criado_em: string;
-  atualizado_em?: string;
+  created_at: string;
+  updated_at?: string;
 }
 
 interface AdminDepoimentosProps {
   token: string;
-  title: string;
 }
 
 export default function AdminDepoimentos({ token }: AdminDepoimentosProps): React.ReactElement {
+  const router = useRouter();
+  const [linkGerado, setLinkGerado] = useState('');
+  const [isGeneratingLink, setIsGeneratingLink] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [depoimentos, setDepoimentos] = useState<Depoimento[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
   const [statusFilter, setStatusFilter] = useState<'todos' | 'pendente' | 'aprovado' | 'rejeitado'>('todos');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalCount, setTotalCount] = useState(0);
-  const itemsPerPage = 10;
-
-  React.useEffect(() => {
-    fetchDepoimentos();
-  }, [statusFilter, currentPage]);
 
   const fetchDepoimentos = useCallback(async () => {
     setIsLoading(true);
     setErrorMessage('');
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://davidviannaadv-backend.onrender.com/api';
-      const params = new URLSearchParams();
-
-      if (statusFilter !== 'todos') {
-        params.append('status', statusFilter);
-      }
-
-      params.append('limite', itemsPerPage.toString());
-      params.append('pagina', currentPage.toString());
-
-      const response = await axios.get(`${apiUrl}/admin/depoimentos`, {
-        params,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const response = await axios.get(`${API_BASE_URL}/depoimentos/admin`, {
+        headers: { Authorization: `Bearer ${token}` },
       });
-
-      setDepoimentos(response.data.data || []);
-      setTotalCount(response.data.total || 0);
+      setDepoimentos(response.data?.data || []);
     } catch (error) {
       let errorMsg = 'Erro ao carregar depoimentos. Por favor, tente novamente.';
-
       if (axios.isAxiosError(error)) {
-        if (error.response?.status === 401) {
-          errorMsg = 'Sessão expirada. Por favor, faça login novamente.';
-        } else if (error.response?.data?.message) {
-          errorMsg = error.response.data.message;
-        } else if (error.message === 'Network Error') {
-          errorMsg = 'Erro de conexão. Verifique sua internet.';
-        }
+        if (error.response?.status === 401) errorMsg = 'Sessão expirada. Por favor, faça login novamente.';
+        else if (error.response?.data?.error) errorMsg = error.response.data.error;
+        else if (error.message === 'Network Error') errorMsg = 'Erro de conexão. Verifique sua internet.';
       }
-
       setErrorMessage(errorMsg);
     } finally {
       setIsLoading(false);
     }
-  }, [token, statusFilter, currentPage]);
+  }, [token]);
 
-  const handleStatusUpdate = async (depoimentoId: string, newStatus: 'aprovado' | 'rejeitado'): Promise<void> => {
+  useEffect(() => {
+    fetchDepoimentos();
+  }, [fetchDepoimentos]);
+
+  const handleStatusUpdate = async (id: string, status: 'aprovado' | 'rejeitado'): Promise<void> => {
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://davidviannaadv-backend.onrender.com/api';
-
       await axios.put(
-        `${apiUrl}/admin/depoimentos/${depoimentoId}`,
-        { status: newStatus },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        `${API_BASE_URL}/depoimentos/admin/${id}`,
+        { status },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      // Update local state
-      setDepoimentos(prev =>
-        prev.map(dep =>
-          dep.id === depoimentoId ? { ...dep, status: newStatus } : dep
-        )
-      );
+      setDepoimentos((prev) => prev.map((d) => (d.id === id ? { ...d, status } : d)));
     } catch (error) {
       let errorMsg = 'Erro ao atualizar depoimento.';
-
-      if (axios.isAxiosError(error)) {
-        if (error.response?.data?.message) {
-          errorMsg = error.response.data.message;
-        }
-      }
-
+      if (axios.isAxiosError(error) && error.response?.data?.error) errorMsg = error.response.data.error;
       setErrorMessage(errorMsg);
     }
   };
 
-  const getStatusBadgeColor = (status: string): string => {
-    switch (status) {
-      case 'aprovado':
-        return 'bg-green-500/10 text-green-400 border-green-500/30';
-      case 'rejeitado':
-        return 'bg-red-500/10 text-red-400 border-red-500/30';
-      case 'pendente':
-      default:
-        return 'bg-yellow-500/10 text-yellow-400 border-yellow-500/30';
+  const handleGerarLink = async (): Promise<void> => {
+    setIsGeneratingLink(true);
+    setErrorMessage('');
+    setCopied(false);
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/depoimentos/admin/gerar-link`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` }, timeout: 90000 }
+      );
+      setLinkGerado(`${window.location.origin}/depoimento/${response.data.token}`);
+    } catch (error) {
+      let errorMsg = 'Erro ao gerar o link.';
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 401) errorMsg = 'Sessão expirada. Por favor, faça login novamente.';
+        else if (error.response?.data?.error) errorMsg = error.response.data.error;
+      }
+      setErrorMessage(errorMsg);
+    } finally {
+      setIsGeneratingLink(false);
     }
   };
 
-  const totalPages = Math.ceil(totalCount / itemsPerPage);
+  const handleCopiar = async (): Promise<void> => {
+    try {
+      await navigator.clipboard.writeText(linkGerado);
+      setCopied(true);
+    } catch {
+      setCopied(false);
+    }
+  };
+
+  const handleLogout = async (): Promise<void> => {
+    await axios.post('/api/admin/logout');
+    await router.push('/admin/login');
+  };
+
+  const getStatusBadgeColor =(status: string): string => {
+    switch (status) {
+      case 'aprovado': return 'bg-green-500/10 text-green-400 border-green-500/30';
+      case 'rejeitado': return 'bg-red-500/10 text-red-400 border-red-500/30';
+      default: return 'bg-yellow-500/10 text-yellow-400 border-yellow-500/30';
+    }
+  };
+
+  const filtered = statusFilter === 'todos' ? depoimentos : depoimentos.filter((d) => d.status === statusFilter);
 
   return (
     <div className="min-h-screen flex flex-col bg-black">
+      <Head>
+        <title>Depoimentos — Área restrita</title>
+        <meta name="robots" content="noindex, nofollow" />
+      </Head>
       <Navbar />
 
-      <Header
-        title="Gerenciar Depoimentos"
-        subtitle="Administre e aprove depoimentos de clientes"
-      />
+      <Header title="Gerenciar Depoimentos" subtitle="Administre e aprove depoimentos de clientes" />
 
       <main className="flex-grow max-w-6xl mx-auto px-4 py-16 w-full">
-        {/* Error Message */}
         {errorMessage && (
           <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/30 mb-6">
             <p className="text-red-400 font-semibold">{errorMessage}</p>
           </div>
         )}
 
-        {/* Filter Section */}
+        <Card shadow="sm" padding="md" className="mb-6">
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-col md:flex-row gap-3 md:items-center md:justify-between">
+              <p className="text-gray-300 text-sm">Gere um link único (válido por 30 dias) para o cliente enviar o depoimento.</p>
+              <div className="flex gap-2">
+                <Button type="button" variant="primary" size="sm" onClick={handleGerarLink} disabled={isGeneratingLink}>
+                  {isGeneratingLink ? 'Gerando...' : 'Gerar link de depoimento'}
+                </Button>
+                <Button type="button" variant="outline" size="sm" onClick={handleLogout}>Sair</Button>
+              </div>
+            </div>
+            {linkGerado && (
+              <div className="flex flex-col md:flex-row gap-2 md:items-center">
+                <input readOnly value={linkGerado} onFocus={(e) => e.target.select()} className="flex-grow px-3 py-2 bg-white/5 border border-white/15 text-white rounded-lg text-sm" />
+                <Button type="button" variant="secondary" size="sm" onClick={handleCopiar}>{copied ? 'Copiado!' : 'Copiar'}</Button>
+              </div>
+            )}
+          </div>
+        </Card>
+
         <Card shadow="sm" padding="md" className="mb-6">
           <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
             <label htmlFor="status-filter" className="block text-sm font-semibold text-gray-300">
@@ -151,10 +166,7 @@ export default function AdminDepoimentos({ token }: AdminDepoimentosProps): Reac
             <select
               id="status-filter"
               value={statusFilter}
-              onChange={(e) => {
-                setStatusFilter(e.target.value as any);
-                setCurrentPage(1);
-              }}
+              onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)}
               className="px-4 py-2 bg-white/5 border border-white/15 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--prata)] focus:border-transparent"
             >
               <option value="todos" className="bg-black text-white">Todos</option>
@@ -162,67 +174,43 @@ export default function AdminDepoimentos({ token }: AdminDepoimentosProps): Reac
               <option value="aprovado" className="bg-black text-white">Aprovados</option>
               <option value="rejeitado" className="bg-black text-white">Rejeitados</option>
             </select>
-            <span className="text-sm text-gray-400 md:ml-auto">
-              Total: {totalCount} depoimento(s)
-            </span>
+            <span className="text-sm text-gray-400 md:ml-auto">Total: {filtered.length} depoimento(s)</span>
           </div>
         </Card>
 
-        {/* Loading State */}
         {isLoading && (
           <div className="text-center py-12">
             <p className="text-gray-400 text-lg">Carregando depoimentos...</p>
           </div>
         )}
 
-        {/* Depoimentos List */}
-        {!isLoading && depoimentos.length > 0 && (
+        {!isLoading && filtered.length > 0 && (
           <div className="space-y-4">
-            {depoimentos.map((depoimento) => (
+            {filtered.map((depoimento) => (
               <Card key={depoimento.id} shadow="sm" padding="md">
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                   <div className="flex-grow">
                     <div className="flex items-center gap-2 mb-2">
-                      <h3 className="font-bold text-white">{depoimento.cliente_nome}</h3>
+                      <h3 className="font-bold text-white">{depoimento.nome}</h3>
                       <span className={`px-2 py-1 text-xs font-semibold rounded border ${getStatusBadgeColor(depoimento.status)}`}>
                         {depoimento.status === 'pendente' ? 'Pendente' : depoimento.status === 'aprovado' ? 'Aprovado' : 'Rejeitado'}
                       </span>
                     </div>
-
-                    {depoimento.profissao && (
-                      <p className="text-sm text-gray-400 mb-2">{depoimento.profissao}</p>
-                    )}
-
-                    <blockquote className="text-gray-300 italic mb-3">
-                      "{depoimento.depoimento}"
-                    </blockquote>
-
+                    <blockquote className="text-gray-300 italic mb-3">&ldquo;{depoimento.texto}&rdquo;</blockquote>
                     <div className="flex flex-col md:flex-row gap-4 text-xs text-gray-500">
-                      <span>Enviado: {new Date(depoimento.criado_em).toLocaleDateString('pt-BR')}</span>
-                      {depoimento.atualizado_em && (
-                        <span>Atualizado: {new Date(depoimento.atualizado_em).toLocaleDateString('pt-BR')}</span>
+                      <span>Enviado: {new Date(depoimento.created_at).toLocaleDateString('pt-BR')}</span>
+                      {depoimento.updated_at && (
+                        <span>Atualizado: {new Date(depoimento.updated_at).toLocaleDateString('pt-BR')}</span>
                       )}
                     </div>
                   </div>
 
                   {depoimento.status === 'pendente' && (
                     <div className="flex gap-2">
-                      <Button
-                        type="button"
-                        variant="primary"
-                        size="sm"
-                        onClick={() => handleStatusUpdate(depoimento.id, 'aprovado')}
-                        disabled={isLoading}
-                      >
+                      <Button type="button" variant="primary" size="sm" onClick={() => handleStatusUpdate(depoimento.id, 'aprovado')}>
                         Aprovar
                       </Button>
-                      <Button
-                        type="button"
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => handleStatusUpdate(depoimento.id, 'rejeitado')}
-                        disabled={isLoading}
-                      >
+                      <Button type="button" variant="secondary" size="sm" onClick={() => handleStatusUpdate(depoimento.id, 'rejeitado')}>
                         Rejeitar
                       </Button>
                     </div>
@@ -233,50 +221,9 @@ export default function AdminDepoimentos({ token }: AdminDepoimentosProps): Reac
           </div>
         )}
 
-        {/* Empty State */}
-        {!isLoading && depoimentos.length === 0 && (
+        {!isLoading && filtered.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-400 text-lg">
-              Nenhum depoimento encontrado com o filtro selecionado.
-            </p>
-          </div>
-        )}
-
-        {/* Pagination */}
-        {!isLoading && totalPages > 1 && (
-          <div className="flex justify-center items-center gap-2 mt-8">
-            <Button
-              type="button"
-              variant="secondary"
-              size="sm"
-              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-              disabled={currentPage === 1 || isLoading}
-            >
-              Anterior
-            </Button>
-
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-              <Button
-                key={page}
-                type="button"
-                variant={currentPage === page ? 'primary' : 'secondary'}
-                size="sm"
-                onClick={() => setCurrentPage(page)}
-                disabled={isLoading}
-              >
-                {page}
-              </Button>
-            ))}
-
-            <Button
-              type="button"
-              variant="secondary"
-              size="sm"
-              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-              disabled={currentPage === totalPages || isLoading}
-            >
-              Próximo
-            </Button>
+            <p className="text-gray-400 text-lg">Nenhum depoimento encontrado com o filtro selecionado.</p>
           </div>
         )}
       </main>
@@ -286,23 +233,19 @@ export default function AdminDepoimentos({ token }: AdminDepoimentosProps): Reac
   );
 }
 
-export const getServerSideProps: GetServerSideProps<AdminDepoimentosProps> = async ({ req, res }) => {
-  // Get token from cookies or local storage (passed from client)
+export const getServerSideProps: GetServerSideProps<AdminDepoimentosProps> = async ({ req }) => {
   const token = req.cookies.auth_token;
 
   if (!token) {
     return {
       redirect: {
-        destination: '/login',
+        destination: '/admin/login',
         permanent: false,
       },
     };
   }
 
   return {
-    props: {
-      token,
-      title: 'Gerenciar Depoimentos - DavidVianna Advocacia',
-    },
+    props: { token },
   };
 };

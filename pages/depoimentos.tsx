@@ -1,20 +1,16 @@
 import { GetStaticProps } from 'next';
 import React from 'react';
-import Link from 'next/link';
+import Head from 'next/head';
 import axios from 'axios';
 import Navbar from '../src/components/Navbar';
-import Header from '../src/components/Header';
-import Card from '../src/components/Card';
-import Button from '../src/components/Button';
 import Footer from '../src/components/Footer';
+import { API_BASE_URL } from '../lib/constants';
 
 interface Depoimento {
   id: string;
-  cliente_nome: string;
-  depoimento: string;
-  profissao?: string;
-  foto_url?: string;
-  criado_em: string;
+  nome: string;
+  texto: string;
+  created_at: string;
 }
 
 interface DepoimentosProps {
@@ -22,58 +18,44 @@ interface DepoimentosProps {
   title: string;
 }
 
-export default function Depoimentos({ depoimentos }: DepoimentosProps): React.ReactElement {
+export default function Depoimentos({ depoimentos, title }: DepoimentosProps): React.ReactElement {
   return (
-    <div className="min-h-screen flex flex-col bg-black">
+    <div className="site-shell">
+      <Head>
+        <title>{title}</title>
+      </Head>
+
       <Navbar />
 
-      <Header
-        title="Depoimentos de Clientes"
-        subtitle="Veja o que nossos clientes dizem sobre nossos serviços"
-      />
-
-      <main className="flex-grow max-w-6xl mx-auto px-4 py-16 w-full">
-        {depoimentos && depoimentos.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {depoimentos.map((depoimento) => (
-              <Card key={depoimento.id} shadow="md" padding="lg" className="flex flex-col">
-                <blockquote className="text-gray-300 italic mb-4 flex-grow">
-                  "{depoimento.depoimento}"
-                </blockquote>
-                <div className="border-t border-white/10 pt-4">
-                  <p className="font-bold text-white">{depoimento.cliente_nome}</p>
-                  {depoimento.profissao && (
-                    <p className="text-sm text-gray-400">{depoimento.profissao}</p>
-                  )}
-                  <p className="text-xs text-gray-500 mt-2">
-                    {new Date(depoimento.criado_em).toLocaleDateString('pt-BR')}
-                  </p>
-                </div>
-              </Card>
-            ))}
+      <main>
+        <section className="testimonials-section section-pad">
+          <div className="content-grid testimonial-heading">
+            <div>
+              <h2>Relações pautadas por <em>clareza.</em></h2>
+            </div>
+            <p>Relatos autorizados por clientes atendidos.</p>
           </div>
-        ) : (
-          <div className="text-center py-12">
-            <p className="text-gray-400 text-lg mb-6">
-              Nenhum depoimento aprovado no momento. Seja o primeiro a compartilhar sua experiência!
+
+          {depoimentos.length > 0 ? (
+            <div className="testimonial-grid">
+              {depoimentos.map((depoimento) => (
+                <article className="testimonial-card" key={depoimento.id}>
+                  <span className="quote-mark">&ldquo;</span>
+                  <p>{depoimento.texto}</p>
+                  <div>
+                    <strong>{depoimento.nome}</strong>
+                    <small>{new Date(depoimento.created_at).toLocaleDateString('pt-BR')}</small>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <p className="testimonial-empty">
+              Nenhum depoimento publicado no momento. Os relatos são coletados diretamente com clientes
+              atendidos, mediante convite pessoal.
             </p>
-            <Link href="/depoimento/novo">
-              <Button variant="primary">
-                Enviar Depoimento
-              </Button>
-            </Link>
-          </div>
-        )}
-
-        {depoimentos && depoimentos.length > 0 && (
-          <div className="text-center mt-12">
-            <Link href="/depoimento/novo">
-              <Button variant="primary">
-                Compartilhe Sua Experiência
-              </Button>
-            </Link>
-          </div>
-        )}
+          )}
+        </section>
       </main>
 
       <Footer />
@@ -83,26 +65,23 @@ export default function Depoimentos({ depoimentos }: DepoimentosProps): React.Re
 
 export const getStaticProps: GetStaticProps<DepoimentosProps> = async () => {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://davidviannaadv-backend.onrender.com/api';
-    const response = await axios.get(`${apiUrl}/depoimentos`, {
-      timeout: 10000, // 10 second timeout
-    });
+    const response = await axios.get(`${API_BASE_URL}/depoimentos`, { timeout: 10000 });
 
     return {
       props: {
-        depoimentos: response.data || [],
-        title: 'Depoimentos - DavidVianna Advocacia',
+        depoimentos: response.data?.data || [],
+        title: 'Depoimentos — David Areias Vianna Advocacia',
       },
-      revalidate: 3600, // Revalidate every hour
+      revalidate: 3600,
     };
   } catch (error) {
     console.error('Error fetching testimonials:', error);
     return {
       props: {
         depoimentos: [],
-        title: 'Depoimentos - DavidVianna Advocacia',
+        title: 'Depoimentos — David Areias Vianna Advocacia',
       },
-      revalidate: 60, // Retry after 1 minute on error
+      revalidate: 60,
     };
   }
 };

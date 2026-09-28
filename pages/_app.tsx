@@ -9,7 +9,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="description" content={SITE_DESCRIPTION} />
-        <meta name="theme-color" content="#8B0000" />
+        <meta name="theme-color" content="#8B1538" />
         <title>{SITE_NAME}</title>
       </Head>
       <Component {...pageProps} />

@@ -2,89 +2,29 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { Phone } from 'lucide-react';
+import { ENDERECO, FOOTER_TAGLINE, OAB, WHATSAPP_1 } from '@/lib/constants';
 
-interface FooterProps {
-  companyName?: string;
-  email?: string;
-  phone?: string;
-  address?: string;
-  socialLinks?: Array<{ icon: string; url: string; label: string }>;
-  quickLinks?: Array<{ label: string; href: string }>;
-}
-
-export default function Footer({
-  companyName = 'DavidVianna Advocacia',
-  email = 'contato@davidvianna.com.br',
-  phone = '+55 (XX) XXXXX-XXXX',
-  address = 'Endereço - Cidade, Estado',
-  socialLinks = [],
-  quickLinks = [
-    { label: 'Home', href: '/' },
-    { label: 'Sobre', href: '/sobre' },
-    { label: 'Serviços', href: '/servicos' },
-    { label: 'Contato', href: '/contato' },
-  ],
-}: FooterProps) {
+export default function Footer() {
   return (
-    <footer className="bg-black text-white py-12 border-t border-white/10">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          <div>
-            <h3 className="text-2xl font-bold text-[var(--prata)] mb-4">{companyName}</h3>
-            <p className="text-gray-400 text-sm">
-              Soluções jurídicas de excelência para o seu negócio.
-            </p>
-          </div>
-
-          <div>
-            <h4 className="font-bold mb-4 text-[var(--prata)] uppercase tracking-widest text-sm">Links Rápidos</h4>
-            <ul className="space-y-2">
-              {quickLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-gray-400 hover:text-white transition-colors duration-200 text-sm"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-bold mb-4 text-[var(--prata)] uppercase tracking-widest text-sm">Contato</h4>
-            <ul className="space-y-2 text-gray-400 text-sm">
-              <li>Email: {email}</li>
-              <li>Telefone: {phone}</li>
-              <li>Endereço: {address}</li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-bold mb-4 text-[var(--prata)] uppercase tracking-widest text-sm">Redes Sociais</h4>
-            <div className="flex gap-4">
-              {socialLinks.map((link) => (
-                <a
-                  key={link.url}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors duration-200"
-                  title={link.label}
-                >
-                  {link.icon}
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <hr className="border-white/10 mb-4" />
-
-        <div className="text-center text-gray-400 text-sm">
-          <p>&copy; {new Date().getFullYear()} {companyName}. Todos os direitos reservados.</p>
-        </div>
+    <footer className="site-footer">
+      <div className="footer-main">
+        <Link className="brand brand--footer" href="/">
+          <img className="brand-logo" src="/logo/dav-logo-mark.png" alt="David Areias Vianna" />
+          <span className="brand-copy">
+            <strong>David Areias Vianna</strong>
+            <small>{FOOTER_TAGLINE}</small>
+          </span>
+        </Link>
+        <p>Advocacia de princípio: a lei como único norte.</p>
+        <a className="footer-whatsapp" href={WHATSAPP_1.href} target="_blank" rel="noreferrer">
+          <Phone size={15} /> Atendimento via WhatsApp
+        </a>
+      </div>
+      <div className="footer-bottom">
+        <span>David Areias Vianna · {OAB}</span>
+        <span>{ENDERECO}</span>
+        <span>© {new Date().getFullYear()} · Todos os direitos reservados</span>
       </div>
     </footer>
   );

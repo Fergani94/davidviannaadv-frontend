@@ -1,98 +1,59 @@
 import { GetStaticProps } from 'next';
 import React from 'react';
+import Head from 'next/head';
+import { FileSearch, Scale, ShieldCheck } from 'lucide-react';
 import Navbar from '../src/components/Navbar';
-import Header from '../src/components/Header';
-import Card from '../src/components/Card';
 import Footer from '../src/components/Footer';
 
 interface AboutProps {
   title: string;
 }
 
-export default function About({ title }: AboutProps): React.ReactElement {
+export default function Sobre({ title }: AboutProps): React.ReactElement {
   return (
-    <div className="min-h-screen flex flex-col bg-black">
+    <div className="site-shell">
+      <Head>
+        <title>{title}</title>
+      </Head>
+
       <Navbar />
 
-      <Header
-        title="Sobre David Vianna"
-        subtitle="Advogado com mais de duas décadas de experiência"
-      />
-
-      <main className="flex-grow max-w-7xl mx-auto px-4 py-16 w-full">
-        <section className="mb-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <Card shadow="md" padding="lg">
-                <img
-                  src="/images/david-vianna.jpg"
-                  alt="David Vianna"
-                  className="w-full h-80 object-cover object-top rounded-lg mb-4"
-                />
-              </Card>
-            </div>
-
-            <div>
-              <h2 className="text-3xl font-bold text-white mb-6">David Vianna</h2>
-              <p className="text-lg text-gray-400 mb-4">
-                Advogado formado há mais de 22 anos, dedicado à prestação de serviços jurídicos de qualidade.
+      <main>
+        <section className="about-section section-pad">
+          <div className="content-grid about-grid">
+            <div className="about-aside">
+              <div className="about-photo">
+                <img src="/images/david-vianna.jpg" alt="David Areias Vianna em seu escritório" />
+              </div>
+              <div className="vertical-rule" />
+              <p className="aside-note">
+                Uma atuação pessoal, objetiva e vinculada ao que os autos e a lei permitem sustentar.
               </p>
-              <div className="space-y-4">
-                <Card shadow="sm" padding="md">
-                  <h3 className="font-bold text-[var(--prata)] mb-2">Formação Acadêmica</h3>
-                  <ul className="text-gray-400 list-disc list-inside space-y-1">
-                    <li>Bacharelado em Direito</li>
-                    <li>Aprovado no Exame da Ordem dos Advogados do Brasil</li>
-                    <li>Cursos de especialização em direito civil e empresarial</li>
-                  </ul>
-                </Card>
-
-                <Card shadow="sm" padding="md">
-                  <h3 className="font-bold text-[var(--prata)] mb-2">Experiência Profissional</h3>
-                  <ul className="text-gray-400 list-disc list-inside space-y-1">
-                    <li>Prática contínua em direito civil por mais de 20 anos</li>
-                    <li>Consultoria em direito empresarial e imobiliário</li>
-                    <li>Resolução de litígios e negociações comerciais</li>
-                  </ul>
-                </Card>
-
-                <Card shadow="sm" padding="md">
-                  <h3 className="font-bold text-[var(--prata)] mb-2">Compromissos Profissionais</h3>
-                  <ul className="text-gray-400 list-disc list-inside space-y-1">
-                    <li>Ética e integridade em todas as relações profissionais</li>
-                    <li>Sigilo e confidencialidade garantidos</li>
-                    <li>Dedicação aos interesses de seus clientes</li>
-                  </ul>
-                </Card>
+            </div>
+            <div className="about-body">
+              <h2>Critério técnico para decisões que exigem <em>seriedade.</em></h2>
+              <p>
+                Com mais de 22 anos de experiência, David Areias Vianna (OAB/RJ 138.124) conduz o atendimento
+                de cada caso de maneira pessoal e individual, sem equipe intermediária. A atuação parte da
+                análise cuidadosa dos fatos, da documentação disponível e dos meios juridicamente adequados
+                para cada situação.
+              </p>
+              <p>
+                <strong>Experiência profissional:</strong> consultoria nas áreas de experiência (Direito de
+                Família, Inventário, Usucapião, Vizinhança, Inquilinato, Responsabilidade Civil e Consumidor);
+                elaboração de contratos; diligências extrajudiciais; e assessoria jurídica em 1ª e 2ª
+                instâncias, bem como extrajudiciais.
+              </p>
+              <p>
+                O atendimento é integralmente online, de segunda a sexta-feira em horário comercial, com
+                disponibilidade para emergências em qualquer dia e horário.
+              </p>
+              <div className="principles">
+                <div><Scale size={21} /><span>Atuação individual</span></div>
+                <div><FileSearch size={21} /><span>Mais de 22 anos de experiência</span></div>
+                <div><ShieldCheck size={21} /><span>Orientação fundamentada</span></div>
               </div>
             </div>
-          </div>
-        </section>
-
-        <section className="mb-16 bg-white/5 rounded-lg p-8 border border-white/10">
-          <h2 className="text-3xl font-bold text-white mb-6">Metodologia de Trabalho</h2>
-          <p className="text-gray-400 mb-6">
-            Utilizamos uma abordagem consultiva focada em entender profundamente as necessidades de cada cliente, oferecendo orientação estratégica e prática jurídica robusta.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card shadow="sm" padding="md">
-              <h3 className="font-bold text-[var(--prata)] mb-2">Análise Detalhada</h3>
-              <p className="text-gray-400 text-sm">
-                Exame cuidadoso de cada situação para identificar oportunidades e riscos.
-              </p>
-            </Card>
-            <Card shadow="sm" padding="md">
-              <h3 className="font-bold text-[var(--prata)] mb-2">Orientação Estratégica</h3>
-              <p className="text-gray-400 text-sm">
-                Recomendações baseadas em experiência e conhecimento jurídico aprofundado.
-              </p>
-            </Card>
-            <Card shadow="sm" padding="md">
-              <h3 className="font-bold text-[var(--prata)] mb-2">Acompanhamento Contínuo</h3>
-              <p className="text-gray-400 text-sm">
-                Suporte permanente durante todo o processo jurídico, do início ao encerramento.
-              </p>
-            </Card>
           </div>
         </section>
       </main>
@@ -105,8 +66,8 @@ export default function About({ title }: AboutProps): React.ReactElement {
 export const getStaticProps: GetStaticProps<AboutProps> = async () => {
   return {
     props: {
-      title: 'Sobre - DavidVianna Advocacia',
+      title: 'Sobre — David Areias Vianna Advocacia',
     },
-    revalidate: 3600,
+    revalidate: 86400,
   };
 };
