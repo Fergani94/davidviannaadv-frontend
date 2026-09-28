@@ -68,6 +68,7 @@ export const FAQS: FaqItem[] = [
 export const NAV_LINKS: Array<{ label: string; href: string }> = [
   { label: 'Sobre', href: '/sobre' },
   { label: 'Atuação', href: '/servicos' },
+  { label: 'Artigos', href: '/artigos' },
   { label: 'Depoimentos', href: '/depoimentos' },
   { label: 'Dúvidas', href: '/faq' },
   { label: 'Contato', href: '/contato' },

@@ -159,7 +159,7 @@ main > .section-pad:first-child { padding-top: clamp(48px, 6vw, 84px); }
 .testimonial-card > div { margin-top: auto; padding-top: 18px; border-top: 1px solid var(--hairline); display: grid; gap: 4px; }
 .testimonial-card strong { font-size: 11px; letter-spacing: .03em; }
 .testimonial-card small { color: #6b6b69; font-size: 10px; }
-.testimonial-empty { max-width: 1440px; margin: auto; padding: 40px; text-align: center; color: #5e5e5c; font-size: 14px; border: 1px dashed var(--hairline); }
+.testimonial-empty, .articles-empty { max-width: 1440px; margin: auto; padding: 40px; text-align: center; color: #5e5e5c; font-size: 14px; border: 1px dashed var(--hairline); }
 
 /* ---------- FAQ ---------- */
 .faq-section { background: var(--silver-light); }
@@ -262,4 +262,29 @@ main > .section-pad:first-child { padding-top: clamp(48px, 6vw, 84px); }
   .hero-content, .hero-still-life { animation: rise .7s var(--ease-out) both; }
   .hero-still-life { animation-delay: .08s; }
   @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+}
+
+/* ---------- Articles (public) ---------- */
+.articles-section { background: #fff; }
+.articles-heading { align-items: end; margin-bottom: 49px; }
+.articles-heading h2 { margin-bottom: 0; }
+.articles-heading > p { max-width: 300px; color: #676765; font-size: 13px; line-height: 1.65; }
+.article-grid { max-width: 1440px; margin: auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 17px; }
+.article-card { display: flex; flex-direction: column; background: var(--warm); border: 1px solid #e8e5e2; color: var(--ink); transition: background .25s var(--ease-out), color .25s var(--ease-out); }
+.article-card:hover { background: #121212; color: #fff; }
+.article-card-cover { aspect-ratio: 16 / 9; background: #121212; overflow: hidden; }
+.article-card-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.article-card-cover--empty { display: grid; place-items: center; }
+.article-card-cover--empty::after { content: ""; width: 32px; height: 1px; background: var(--ruby); }
+.article-card-body { display: flex; flex-direction: column; flex: 1; padding: 22px 24px 24px; }
+.article-card h3 { font: 500 24px/1.15 "Playfair Display", Georgia, serif; letter-spacing: -.03em; margin: 0 0 12px; }
+.article-card p { margin: 0 0 20px; font-size: 13px; line-height: 1.65; opacity: .78; }
+.article-card-meta { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--hairline); display: flex; justify-content: space-between; align-items: center; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; opacity: .8; }
+
+@media (max-width: 1040px) {
+  .article-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 760px) {
+  .article-grid { grid-template-columns: 1fr; gap: 11px; }
+  .articles-heading { margin-bottom: 34px; }
 }

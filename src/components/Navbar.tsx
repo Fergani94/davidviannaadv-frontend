@@ -36,7 +36,7 @@ export default function Navbar() {
           <Link
             key={link.href}
             href={link.href}
-            className={router.pathname === link.href ? 'active' : undefined}
+            className={router.pathname === link.href || router.pathname.startsWith(`${link.href}/`) ? 'active' : undefined}
             onClick={closeMenu}
           >
             {link.label}
