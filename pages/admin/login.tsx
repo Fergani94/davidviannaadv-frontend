@@ -69,8 +69,9 @@ export default function AdminLogin(): React.ReactElement {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  if (req.cookies.auth_token) {
+export const getServerSideProps: GetServerSideProps = async ({ req, query }) => {
+  // With ?expirou the notice must stay reachable even if a stale auth_token cookie is still present (avoids a redirect loop).
+  if (req.cookies.auth_token && !query.expirou) {
     return { redirect: { destination: '/admin/artigos', permanent: false } };
   }
   return { props: {} };
