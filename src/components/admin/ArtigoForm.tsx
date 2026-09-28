@@ -29,7 +29,13 @@ export default function ArtigoForm({ token, artigo, avisoInicial = '' }: ArtigoF
   const [erro, setErro] = useState('');
   const [sucesso, setSucesso] = useState(avisoInicial);
   const sujo = useRef(false);
+  const avisosRef = useRef<HTMLDivElement>(null);
   const ocupado = salvando || enviandoCapa;
+
+  // The buttons sit below the editor: bring the save feedback into view
+  useEffect(() => {
+    if (erro || sucesso) avisosRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }, [erro, sucesso]);
 
   // Warn before losing unsaved edits: closing/reloading the tab and in-app navigation
   useEffect(() => {
@@ -119,16 +125,18 @@ export default function ArtigoForm({ token, artigo, avisoInicial = '' }: ArtigoF
 
   return (
     <div className="space-y-6">
-      {erro && (
-        <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/30" role="alert">
-          <p className="text-red-400 font-semibold">{erro}</p>
-        </div>
-      )}
-      {sucesso && (
-        <div className="p-4 rounded-lg bg-green-500/10 border border-green-500/30" role="status">
-          <p className="text-green-400 font-semibold">{sucesso}</p>
-        </div>
-      )}
+      <div ref={avisosRef} className="space-y-6 empty:hidden scroll-mt-28">
+        {erro && (
+          <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/30" role="alert">
+            <p className="text-red-400 font-semibold">{erro}</p>
+          </div>
+        )}
+        {sucesso && (
+          <div className="p-4 rounded-lg bg-green-500/10 border border-green-500/30" role="status">
+            <p className="text-green-400 font-semibold">{sucesso}</p>
+          </div>
+        )}
+      </div>
 
       <div>
         <label htmlFor="titulo" className="block text-sm font-semibold text-gray-300 mb-2">Título</label>

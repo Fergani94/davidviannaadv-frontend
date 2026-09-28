@@ -1,4 +1,5 @@
 import { GetStaticProps } from 'next';
+import { PHASE_PRODUCTION_BUILD } from 'next/constants';
 import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -76,6 +77,9 @@ export const getStaticProps: GetStaticProps<ArtigosProps> = async () => {
     return { props: { artigos, erro: false }, revalidate: 60 };
   } catch (error) {
     console.error('Error fetching articles:', error);
+    // At runtime rethrow so Next keeps the last good page; error props only when there is no page to keep (build/dev).
+    // NEXT_PHASE is only set while building (never to PHASE_PRODUCTION_SERVER at runtime), so detect the runtime by exclusion.
+    if (process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE !== PHASE_PRODUCTION_BUILD) throw error;
     // Short revalidate so a slow/asleep backend does not keep the error page for long
     return { props: { artigos: [], erro: true }, revalidate: 10 };
   }

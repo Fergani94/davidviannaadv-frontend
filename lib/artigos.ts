@@ -30,7 +30,7 @@ export interface ArtigoAdmin {
 
 export type ArtigoAdminLinha = Omit<ArtigoAdmin, 'conteudo'>;
 
-const TIMEOUT_MS = 10000;
+const TIMEOUT_MS = 25000;
 
 export async function buscarArtigos(): Promise<ArtigoResumo[]> {
   const response = await axios.get(`${API_BASE_URL}/artigos`, { timeout: TIMEOUT_MS });

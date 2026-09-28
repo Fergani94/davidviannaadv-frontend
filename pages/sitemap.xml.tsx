@@ -9,11 +9,16 @@ function escapar(texto: string): string {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  let artigos: ArtigoResumo[] = [];
+  let artigos: ArtigoResumo[];
   try {
     artigos = await buscarArtigos();
   } catch {
-    // Without the backend the sitemap still lists the fixed pages
+    // Do not cache a sitemap without articles: answer 503 so crawlers retry shortly
+    res.statusCode = 503;
+    res.setHeader('Cache-Control', 'no-store');
+    res.setHeader('Retry-After', '120');
+    res.end();
+    return { props: {} };
   }
 
   const urls = [
