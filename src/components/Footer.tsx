@@ -24,7 +24,10 @@ export default function Footer() {
       <div className="footer-bottom">
         <span>David Areias Vianna · {OAB}</span>
         <span>{ENDERECO}</span>
-        <span>© {new Date().getFullYear()} · Todos os direitos reservados</span>
+        <span>
+          © {new Date().getFullYear()} · Todos os direitos reservados ·{' '}
+          <Link className="footer-admin" href="/admin/login">Área restrita</Link>
+        </span>
       </div>
     </footer>
   );

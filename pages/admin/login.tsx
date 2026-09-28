@@ -12,7 +12,9 @@ export default function AdminLogin(): React.ReactElement {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState(
+    router.query.expirou ? 'Sua sessão expirou. Entre novamente.' : ''
+  );
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -21,7 +23,7 @@ export default function AdminLogin(): React.ReactElement {
 
     try {
       await axios.post('/api/admin/login', { email, password });
-      await router.push('/admin/depoimentos');
+      await router.push('/admin/artigos');
     } catch (error) {
       let message = 'Não foi possível entrar. Tente novamente.';
       if (axios.isAxiosError(error) && error.response?.data?.error) message = error.response.data.error;
@@ -69,7 +71,7 @@ export default function AdminLogin(): React.ReactElement {
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   if (req.cookies.auth_token) {
-    return { redirect: { destination: '/admin/depoimentos', permanent: false } };
+    return { redirect: { destination: '/admin/artigos', permanent: false } };
   }
   return { props: {} };
 };

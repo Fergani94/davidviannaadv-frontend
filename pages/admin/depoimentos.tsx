@@ -1,13 +1,13 @@
 import { GetServerSideProps } from 'next';
 import React, { useCallback, useEffect, useState } from 'react';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 import axios from 'axios';
 import Navbar from '../../src/components/Navbar';
 import Header from '../../src/components/Header';
 import Card from '../../src/components/Card';
 import Button from '../../src/components/Button';
 import Footer from '../../src/components/Footer';
+import AdminNav from '../../src/components/AdminNav';
 import { API_BASE_URL } from '../../lib/constants';
 
 interface Depoimento {
@@ -24,7 +24,6 @@ interface AdminDepoimentosProps {
 }
 
 export default function AdminDepoimentos({ token }: AdminDepoimentosProps): React.ReactElement {
-  const router = useRouter();
   const [linkGerado, setLinkGerado] = useState('');
   const [isGeneratingLink, setIsGeneratingLink] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -106,11 +105,6 @@ export default function AdminDepoimentos({ token }: AdminDepoimentosProps): Reac
     }
   };
 
-  const handleLogout = async (): Promise<void> => {
-    await axios.post('/api/admin/logout');
-    await router.push('/admin/login');
-  };
-
   const getStatusBadgeColor =(status: string): string => {
     switch (status) {
       case 'aprovado': return 'bg-green-500/10 text-green-400 border-green-500/30';
@@ -128,6 +122,7 @@ export default function AdminDepoimentos({ token }: AdminDepoimentosProps): Reac
         <meta name="robots" content="noindex, nofollow" />
       </Head>
       <Navbar />
+      <AdminNav />
 
       <Header title="Gerenciar Depoimentos" subtitle="Administre e aprove depoimentos de clientes" />
 
@@ -146,7 +141,6 @@ export default function AdminDepoimentos({ token }: AdminDepoimentosProps): Reac
                 <Button type="button" variant="primary" size="sm" onClick={handleGerarLink} disabled={isGeneratingLink}>
                   {isGeneratingLink ? 'Gerando...' : 'Gerar link de depoimento'}
                 </Button>
-                <Button type="button" variant="outline" size="sm" onClick={handleLogout}>Sair</Button>
               </div>
             </div>
             {linkGerado && (
