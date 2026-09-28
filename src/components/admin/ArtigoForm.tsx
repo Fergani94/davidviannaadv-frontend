@@ -54,6 +54,15 @@ export default function ArtigoForm({ token, artigo, avisoInicial = '' }: ArtigoF
     };
   }, [router]);
 
+  // The 401 redirect goes through the unsaved-changes guard: if the user cancels it, tratarErroAdmin rejects, so fall back to a message
+  async function mensagemDeErro(e: unknown, padrao: string): Promise<string> {
+    try {
+      return await tratarErroAdmin(e, router, padrao);
+    } catch {
+      return 'Sessão expirada. Copie o seu texto e faça login novamente.';
+    }
+  }
+
   function marcarSujo(): void {
     sujo.current = true;
     setSucesso('');
@@ -74,10 +83,10 @@ export default function ArtigoForm({ token, artigo, avisoInicial = '' }: ArtigoF
       } else {
         const criado = await criarArtigo(token, dados);
         sujo.current = false;
-        await router.replace(`/admin/artigos/${criado.id}?criado=1`);
+        await router.replace(`/admin/artigos/${criado.id}?criado=${published ? 'publicado' : 'rascunho'}`);
       }
     } catch (e) {
-      setErro(await tratarErroAdmin(e, router, 'Erro ao salvar o artigo. Tente novamente.'));
+      setErro(await mensagemDeErro(e, 'Erro ao salvar o artigo. Tente novamente.'));
     } finally {
       setSalvando(false);
     }
@@ -100,7 +109,7 @@ export default function ArtigoForm({ token, artigo, avisoInicial = '' }: ArtigoF
       setCapaUrl(await enviarCapa(token, arquivo));
       marcarSujo();
     } catch (err) {
-      setErro(await tratarErroAdmin(err, router, 'Não foi possível enviar a imagem. Tente novamente.'));
+      setErro(await mensagemDeErro(err, 'Não foi possível enviar a imagem. Tente novamente.'));
     } finally {
       setEnviandoCapa(false);
     }

@@ -38,6 +38,14 @@ export default function EditarArtigo({ token }: EditarArtigoProps): React.ReactE
     };
   }, [id, token]);
 
+  const criado = router.query.criado;
+  const avisoInicial =
+    criado === 'publicado'
+      ? 'Artigo criado e publicado.'
+      : criado === 'rascunho' || criado === '1'
+        ? 'Rascunho criado. Você pode continuar editando.'
+        : '';
+
   return (
     <AdminShell titulo="Editar artigo" subtitulo="Altere o texto, a capa e o estado de publicação">
       {carregando && (
@@ -53,7 +61,7 @@ export default function EditarArtigo({ token }: EditarArtigoProps): React.ReactE
           key={artigo.id}
           token={token}
           artigo={artigo}
-          avisoInicial={router.query.criado === '1' ? 'Rascunho criado. Você pode continuar editando.' : ''}
+          avisoInicial={avisoInicial}
         />
       )}
     </AdminShell>
